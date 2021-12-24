@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foodresq/screens/add_ingredient.dart';
+import 'package:foodresq/screens/ingredient_listing.dart';
 import 'package:foodresq/tensorflow.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 
@@ -27,7 +28,8 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const AddIngredientPage(title: 'Add Ingredient'),
+      home: IngredientListingPage(),
+      //const AddIngredientPage(title: 'Add Ingredient'),
     );
   }
 }

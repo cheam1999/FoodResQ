@@ -25,16 +25,16 @@ class Ingredient {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'ingredientName': ingredientName,
-      'expiryDate': expiryDate,
+      'ingredient_name': ingredientName,
+      'expiry_date': expiryDate,
     };
   }
 
   factory Ingredient.fromMap(Map<String, dynamic> map) {
     return Ingredient(
       id: checkAndReturnInt(map['id']),
-      ingredientName: map['ingredientName'],
-      expiryDate: map['expiryDate'],
+      ingredientName: map['ingredient_name'],
+      expiryDate: map['expiry_date'],
     );
   }
 

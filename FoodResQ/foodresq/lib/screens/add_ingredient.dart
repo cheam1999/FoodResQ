@@ -67,6 +67,7 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
   @override
   void dispose() {
     Tflite.close();
+    //dateController.dispose();
     super.dispose();
   }
 
@@ -168,78 +169,84 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
                         Get.back();
                         //dialog pop up
                         showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                scrollable: true,
-                                title: Text('Add Ingredient Manually'),
-                                content: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Form(
-                                    child: Column(
-                                      children: <Widget>[
-                                        TextFormField(
-                                          controller: ingredientController,
-                                          decoration: InputDecoration(
-                                            labelText: 'Ingredient',
-                                            icon: Icon(Icons.fastfood),
+                          context: context,
+                          builder: (BuildContext context) {
+                            return StatefulBuilder(
+                              builder: (context, setState) {
+                                return AlertDialog(
+                                  scrollable: true,
+                                  title: Text('Add Ingredient Manually'),
+                                  content: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Form(
+                                      child: Column(
+                                        children: <Widget>[
+                                          TextFormField(
+                                            controller: ingredientController,
+                                            decoration: InputDecoration(
+                                              labelText: 'Ingredient',
+                                              icon: Icon(Icons.fastfood),
+                                            ),
                                           ),
-                                        ),
-                                        TextFormField(
-                                          controller: dateController,
-                                          onTap: () {
-                                            // Below line stops keyboard from appearing
-                                            FocusScope.of(context)
-                                                .requestFocus(new FocusNode());
+                                          TextFormField(
+                                            controller: dateController,
+                                            onTap: () async {
+                                              // Below line stops keyboard from appearing
+                                              FocusScope.of(context)
+                                                  .requestFocus(
+                                                      new FocusNode());
 
-                                            // Show Date Picker Here
-                                            _selectDate(context);
+                                              // Show Date Picker Here
+                                              await _selectDate(context);
 
-                                            dateController.text =
-                                                "${_selectedDate.toLocal()}"
-                                                    .split(' ')[0];
-                                          },
-                                          decoration: InputDecoration(
-                                            labelText: 'Expiry Date',
-                                            icon: Icon(
-                                                Icons.calendar_today_rounded),
+                                              dateController.text =
+                                                  "${_selectedDate.toLocal()}"
+                                                      .split(' ')[0];
+                                            },
+                                            decoration: InputDecoration(
+                                              labelText: 'Expiry Date',
+                                              icon: Icon(
+                                                  Icons.calendar_today_rounded),
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                                actions: [
-                                  ElevatedButton(
-                                    child: Text("Save"),
-                                    onPressed: () async {
-                                      var ingredient =
-                                          ingredientController.text;
+                                  actions: [
+                                    ElevatedButton(
+                                      child: Text("Save"),
+                                      onPressed: () async {
+                                        var ingredient =
+                                            ingredientController.text;
 
-                                      bool success = false;
+                                        bool success = false;
 
-                                      //userID hard code
-                                      success = await saveIngredient(
-                                          1, ingredient, _selectedDate);
+                                        //userID hard code
+                                        success = await saveIngredient(
+                                            1, ingredient, _selectedDate);
 
-                                      if (success) {
-                                        //Navigator.of(context).pop();
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  IngredientListingPage()),
-                                        );
-                                      } else
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                                content: const Text(
-                                                    'Fail to save!')));
-                                    },
-                                  )
-                                ],
-                              );
-                            });
+                                        if (success) {
+                                          Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    IngredientListingPage()),
+                                            (Route<dynamic> route) => false,
+                                          );
+                                        } else
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                                  content: const Text(
+                                                      'Fail to save!')));
+                                      },
+                                    )
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        );
                       },
                       icon: Icon(Icons.edit),
                       label: Text("Add Ingredient Manually"),
@@ -304,7 +311,7 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
                     ? Container(
                         child: Center(
                           child: Text(
-                            "Image shown here",
+                            "Image Placeholder",
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -393,12 +400,12 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
                                     1, _outputs![0]["label"], _selectedDate);
 
                                 if (success) {
-                                  //Navigator.of(context).pop();
-                                  Navigator.push(
+                                  Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             IngredientListingPage()),
+                                    (Route<dynamic> route) => false,
                                   );
                                 } else
                                   ScaffoldMessenger.of(context).showSnackBar(
@@ -485,3 +492,21 @@ Future<bool> saveIngredient(
     throw CustomException(message: 'Failed to save ingredient!');
   }
 }
+
+//   //Text Recognition
+//   readTextFromImage() async {
+//     result = '';
+//     FirebaseVisionImage myImage = FirebaseVisionImage.fromFile(pickedImage);
+//     TextRecognizer recognizeText = FirebaseVision.instance.textRecognizer();
+//     VisionText readText = await recognizeText.processImage(myImage);
+
+//     for (TextBlock block in readText.blocks) {
+//       for (TextLine line in block.lines) {
+//         for (TextElement word in line.elements) {
+//           setState(() {
+//             result = result + ' ' + word.text;
+//           });
+//         }
+//       }
+//     }
+//   }

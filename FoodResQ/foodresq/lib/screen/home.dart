@@ -2,10 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:foodresq/constants/colour_constant.dart';
 import 'package:foodresq/screen/ingredient.dart';
-import 'package:foodresq/screen/introduction.dart';
 import 'package:foodresq/screen/profile.dart';
 import 'package:foodresq/screen/recipe.dart';
-
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class HomeScreen extends StatefulWidget {
   static String routeName = "/home";
@@ -19,10 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   PageController _pageController = PageController();
   int _selectedIndex = 0;
 
-  List<Widget> _screens = [
-    IntroductionScreen(),
-    
-  ];
+  List<Widget> _screens = [IngredientScreen(), RecipeScreen(), ProfileScreen()];
 
   @override
   void initState() {

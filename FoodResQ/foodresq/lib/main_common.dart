@@ -1,11 +1,11 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:foodresq/routes.dart';
 import 'package:foodresq/screen/home.dart';
+import 'package:foodresq/screen/introduction.dart';
+import 'package:foodresq/screen/start.dart';
 import 'package:foodresq/theme.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
 
 class MyApp extends StatelessWidget {
   @override
@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'FoodResQ',
       theme: theme(),
-      initialRoute: HomeScreen.routeName,
+      initialRoute: StartScreen.routeName,
       routes: routes,
     );
   }

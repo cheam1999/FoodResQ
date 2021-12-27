@@ -3,8 +3,12 @@ import 'dart:io';
 
 //import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/material.dart';
+import 'package:foodresq/constants/colour_constant.dart';
+import 'package:foodresq/env.dart';
+import 'package:foodresq/main_local.dart';
 import 'package:foodresq/models/custom_exception.dart';
-import 'package:foodresq/screens/ingredient_listing.dart';
+import 'package:foodresq/screen/home.dart';
+import 'package:foodresq/screen/ingredient_listing.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -12,6 +16,7 @@ import 'package:tflite/tflite.dart';
 import 'package:get/get.dart';
 
 class AddIngredientPage extends StatefulWidget {
+  static String routeName = "/addIngredient";
   const AddIngredientPage({Key? key, required this.title}) : super(key: key);
 
   final String title;
@@ -224,16 +229,13 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
 
                                         //userID hard code
                                         success = await saveIngredient(
-                                            3, ingredient, _selectedDate);
+                                            userID, ingredient, _selectedDate);
 
                                         if (success) {
-                                          Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    IngredientListingPage()),
-                                            (Route<dynamic> route) => false,
-                                          );
+                                          Navigator.pushNamedAndRemoveUntil(
+                                              context,
+                                              HomeScreen.routeName,
+                                              ModalRoute.withName('/'));
                                         } else
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(SnackBar(
@@ -280,160 +282,170 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColourConstant.kBackgroundColor,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text(widget.title),
-        backgroundColor: Colors.brown,
-      ),
-      body: SafeArea(
-        child: SizedBox(
-          width: double.infinity,
-          child: SingleChildScrollView(
-            // dragStartBehavior: DragStartBehavior.down
-            physics: ClampingScrollPhysics(),
-            // padding: EdgeInsets.symmetric(
-            //     horizontal: getProportionateScreenWidth(20)),
-            padding: EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 30.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(height: 20),
-                Text(
-                  'Your Ingredient',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 20),
-                _image == null
-                    ? Container(
-                        child: Center(
-                          child: Text(
-                            "Image Placeholder",
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        width: 200,
-                        height: 200,
-                        color: Colors.black38,
-                      )
-                    : Container(
-                        width: 200,
-                        height: 200,
-                        color: Colors.white,
-                        child: FittedBox(
-                          child: Image.file(_image!),
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                SizedBox(height: 50),
-                _outputs != null
-                    ? Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Ingredient Name:",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 0,
-                                width: 10,
-                              ),
-                              Text(
-                                _outputs![0]["label"],
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Expiry Date:",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 0,
-                                width: 10,
-                              ),
-                              Text("${_selectedDate.toLocal()}".split(' ')[0]),
-                              SizedBox(
-                                height: 0,
-                                width: 10,
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.calendar_today_rounded),
-                                iconSize: 20,
-                                onPressed: () => _selectDate(context),
-                                color: Colors.orange.shade800,
-                              ),
-                            ],
-                          ),
-                          Text(
-                            "Note: For things without expiry date, select an estimated expiry date.",
-                            style: TextStyle(
-                              fontSize: 10,
-                            ),
-                          ),
-                          SizedBox(height: 20),
-                          Container(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                bool success = false;
-
-                                //userID hard code
-                                success = await saveIngredient(
-                                    1, _outputs![0]["label"], _selectedDate);
-
-                                if (success) {
-                                  Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            IngredientListingPage()),
-                                    (Route<dynamic> route) => false,
-                                  );
-                                } else
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content:
-                                              const Text('Fail to save!')));
-                              },
-                              child: Text(
-                                "Confirm & Save",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.orange.shade800),
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
-                    : Container(),
-              ],
-            ),
+        backgroundColor: ColourConstant.kHeaderColor,
+        title: Text(
+          widget.title,
+          style: TextStyle(
+            color: ColourConstant.kTextColor,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
           ),
         ),
+        elevation: 0,
+      ),
+      body: SafeArea(
+        child: LayoutBuilder(builder: (context, constraint) {
+          return SizedBox(
+            width: double.infinity,
+            child: SingleChildScrollView(
+              // dragStartBehavior: DragStartBehavior.down
+              physics: ClampingScrollPhysics(),
+              // padding: EdgeInsets.symmetric(
+              //     horizontal: getProportionateScreenWidth(20)),
+              padding: EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 30.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(height: 20),
+                  Text(
+                    'Your Ingredient',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 20),
+                  _image == null
+                      ? Container(
+                          child: Center(
+                            child: Text(
+                              "Image Placeholder",
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          width: 200,
+                          height: 200,
+                          color: Colors.black38,
+                        )
+                      : Container(
+                          width: 200,
+                          height: 200,
+                          color: Colors.white,
+                          child: FittedBox(
+                            child: Image.file(_image!),
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                  SizedBox(height: 50),
+                  _outputs != null
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Ingredient Name:",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 0,
+                                  width: 10,
+                                ),
+                                Text(
+                                  _outputs![0]["label"],
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Expiry Date:",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 0,
+                                  width: 10,
+                                ),
+                                Text(
+                                    "${_selectedDate.toLocal()}".split(' ')[0]),
+                                SizedBox(
+                                  height: 0,
+                                  width: 10,
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.calendar_today_rounded),
+                                  iconSize: 20,
+                                  onPressed: () => _selectDate(context),
+                                  color: Colors.orange.shade800,
+                                ),
+                              ],
+                            ),
+                            Text(
+                              "Note: For things without expiry date, select an estimated expiry date.",
+                              style: TextStyle(
+                                fontSize: 10,
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                            Container(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  bool success = false;
+
+                                  //userID hard code
+                                  success = await saveIngredient(
+                                      userID, _outputs![0]["label"], _selectedDate);
+
+                                  if (success) {
+                                    Navigator.pushNamedAndRemoveUntil(
+                                        context,
+                                        HomeScreen.routeName,
+                                        ModalRoute.withName('/'));
+                                  } else
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            content:
+                                                const Text('Fail to save!')));
+                                },
+                                child: Text(
+                                  "Confirm & Save",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Colors.orange.shade800),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      : Container(),
+                ],
+              ),
+            ),
+          );
+        }),
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: "Pick Image",
@@ -460,7 +472,7 @@ Future<bool> saveIngredient(
 
   print(expiryDateString);
 
-  var url = Uri.parse('http://192.168.0.122:8000/api/' + apiRoute);
+  var url = Uri.parse(env!.baseUrl + apiRoute);
   //var url = Uri.parse('http://127.0.0.1:8000/api/' + apiRoute);
 
   print('Requesting to $url');

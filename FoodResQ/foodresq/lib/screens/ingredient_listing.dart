@@ -38,10 +38,17 @@ class _IngredientListingPageState extends State<IngredientListingPage> {
           child: Container(
             width: double.infinity,
             child: FutureBuilder(
-              future: retrieveIngredients(2),
+              future: retrieveIngredients(3),
               builder: (context, AsyncSnapshot snapshot) {
                 if (!snapshot.hasData) {
-                  return Center(child: CircularProgressIndicator());
+                  return Center(
+                    child: Text(
+                      "No Ingredient Saved",
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                  );
                 } else {
                   return Container(
                     child: RefreshIndicator(

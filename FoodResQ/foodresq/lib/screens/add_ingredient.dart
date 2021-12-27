@@ -224,7 +224,7 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
 
                                         //userID hard code
                                         success = await saveIngredient(
-                                            1, ingredient, _selectedDate);
+                                            3, ingredient, _selectedDate);
 
                                         if (success) {
                                           Navigator.pushAndRemoveUntil(

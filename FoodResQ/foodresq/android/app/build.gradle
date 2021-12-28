@@ -42,6 +42,11 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
+    aaptOptions {
+        noCompress 'tflite'
+        noCompress 'lite'
+    }
+
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.example.foodresq"
@@ -66,4 +71,6 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation platform('com.google.firebase:firebase-bom:28.0.1') 
+    implementation 'com.google.firebase:firebase-ml-vision-image-label-model:17.0.2'
 }

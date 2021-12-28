@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:foodresq/constants/colour_constant.dart';
-import 'package:foodresq/screen/ingredient.dart';
+import 'package:foodresq/screen/add_ingredient.dart';
+import 'package:foodresq/screen/ingredient_listing.dart';
 import 'package:foodresq/screen/profile.dart';
 import 'package:foodresq/screen/recipe.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -18,7 +19,11 @@ class _HomeScreenState extends State<HomeScreen> {
   PageController _pageController = PageController();
   int _selectedIndex = 0;
 
-  List<Widget> _screens = [IngredientScreen(), RecipeScreen(), ProfileScreen()];
+  List<Widget> _screens = [
+    IngredientListingPage(),
+    RecipeScreen(),
+    ProfileScreen()
+  ];
 
   @override
   void initState() {
@@ -71,14 +76,20 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // TODO Snap photo
-          print("pressed");
-        },
+        tooltip: "Add Ingredient",
         backgroundColor: ColourConstant.kButtonColor,
         elevation: 5.0,
+        onPressed: () async {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    AddIngredientPage(title: 'Add Ingredient')),
+          );
+        },
         child: Icon(
-          Icons.camera_alt_rounded,
+          Icons.add,
+          size: 20,
           color: Colors.white,
         ),
       ),

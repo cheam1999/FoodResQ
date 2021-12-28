@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:foodresq/component/default_button.dart';
 import 'package:foodresq/component/normal_text.dart';
+import 'package:foodresq/screen/home.dart';
 import 'package:foodresq/utilities/size_config.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -34,10 +35,10 @@ class IntroductionScreen extends HookConsumerWidget {
                   children: [
                     // Spacer(),
                     DefaultButton(
-                        text: "Get started", press: () => print("pressed")
-                        //Navigator.pushNamed(
-                        // context, VerificationFormScreen.routeName),
-                        ),
+                      text: "Get started",
+                      press: () =>
+                          Navigator.pushNamed(context, HomeScreen.routeName),
+                    ),
                     Spacer(),
                   ],
                 ),
@@ -60,7 +61,7 @@ class IntroductionGraphic extends StatelessWidget {
     return Column(
       children: [
         Spacer(
-          flex: 3,
+          flex: 2,
         ),
         NormalText(
           align: TextAlign.center,

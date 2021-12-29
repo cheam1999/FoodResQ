@@ -139,8 +139,8 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
                       icon: Icon(Icons.camera),
                       label: Text("Camera"),
                       style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.brown),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            ColourConstant.kButtonColor),
                       ),
                     ),
                     ElevatedButton.icon(
@@ -150,8 +150,8 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
                       icon: Icon(Icons.image),
                       label: Text("Gallery"),
                       style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.brown),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            ColourConstant.kButtonColor),
                       ),
                     ),
                     SizedBox(
@@ -193,6 +193,9 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
                                               icon: Icon(Icons.fastfood),
                                             ),
                                           ),
+                                          SizedBox(
+                                            height: 20.0,
+                                          ),
                                           TextFormField(
                                             controller: dateController,
                                             onTap: () async {
@@ -220,6 +223,11 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
                                   ),
                                   actions: [
                                     ElevatedButton(
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all<Color>(
+                                                ColourConstant.kButtonColor),
+                                      ),
                                       child: Text("Save"),
                                       onPressed: () async {
                                         var ingredient =
@@ -253,8 +261,8 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
                       icon: Icon(Icons.edit),
                       label: Text("Add Ingredient Manually"),
                       style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.brown),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            ColourConstant.kButtonColor),
                       ),
                     ),
                     SizedBox(
@@ -267,8 +275,8 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
                       icon: Icon(Icons.close),
                       label: Text("Cancel"),
                       style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.brown),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            ColourConstant.kButtonColor),
                       ),
                     ),
                   ],
@@ -410,8 +418,8 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
                                   bool success = false;
 
                                   //userID hard code
-                                  success = await saveIngredient(
-                                      userID, _outputs![0]["label"], _selectedDate);
+                                  success = await saveIngredient(userID,
+                                      _outputs![0]["label"], _selectedDate);
 
                                   if (success) {
                                     Navigator.pushNamedAndRemoveUntil(
@@ -426,15 +434,11 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
                                 },
                                 child: Text(
                                   "Confirm & Save",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
                                 ),
                                 style: ButtonStyle(
                                   backgroundColor:
                                       MaterialStateProperty.all<Color>(
-                                          Colors.orange.shade800),
+                                          ColourConstant.kButtonColor),
                                 ),
                               ),
                             ),
@@ -455,7 +459,7 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
           size: 20,
           color: Colors.white,
         ),
-        backgroundColor: Colors.brown,
+        backgroundColor: ColourConstant.kButtonColor,
       ),
     );
   }

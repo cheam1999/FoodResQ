@@ -36,8 +36,8 @@ class IntroductionScreen extends HookConsumerWidget {
                     // Spacer(),
                     DefaultButton(
                       text: "Get started",
-                      press: () =>
-                          Navigator.pushNamed(context, HomeScreen.routeName),
+                      press: () => Navigator.pushNamedAndRemoveUntil(context,
+                          HomeScreen.routeName, ModalRoute.withName('/')),
                     ),
                     Spacer(),
                   ],

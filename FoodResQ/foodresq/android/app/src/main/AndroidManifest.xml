@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.foodresq">
+    package="com.example.foodresq"
+    android:installLocation="preferExternal">
    <application
         android:label="foodresq"
         android:icon="@mipmap/ic_launcher">

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:foodresq/controller/auth_controller.dart';
+import 'package:foodresq/screen/auth/sign_in.dart';
+import 'package:foodresq/screen/home.dart';
 import 'package:foodresq/screen/introduction.dart';
 import 'package:foodresq/utilities/size_config.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -27,7 +30,7 @@ class _StartScreenState extends ConsumerState<StartScreen> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    //final authControllerState = ref.watch(authControllerProvider);
+    final authControllerState = ref.watch(authControllerProvider);
 
     //hardcode
     isLoading = false;
@@ -38,10 +41,9 @@ class _StartScreenState extends ConsumerState<StartScreen> {
               child: CircularProgressIndicator(),
             ),
           )
-        : IntroductionScreen();
-    // authControllerState.isLogin
-    //     ? HomeScreen()
-    //     : IntroductionScreen();
+        : authControllerState.isLogin
+            ? HomeScreen()
+            : IntroductionScreen();
   }
 
   @override

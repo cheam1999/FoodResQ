@@ -10,7 +10,7 @@ import 'env.dart';
 import 'main_common.dart';
 
 // Global userID hard code
-int userID = 1;
+//int userID = 1;
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();

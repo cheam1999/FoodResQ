@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:foodresq/component/default_button.dart';
 import 'package:foodresq/component/normal_text.dart';
+import 'package:foodresq/screen/auth/sign_in.dart';
 import 'package:foodresq/screen/home.dart';
 import 'package:foodresq/utilities/size_config.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -37,7 +38,7 @@ class IntroductionScreen extends HookConsumerWidget {
                     DefaultButton(
                       text: "Get started",
                       press: () =>
-                          Navigator.pushNamed(context, HomeScreen.routeName),
+                          Navigator.pushNamed(context, SignInScreen.routeName),
                     ),
                     Spacer(),
                   ],

@@ -4,27 +4,32 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:foodresq/constants/colour_constant.dart';
+import 'package:foodresq/constants/dialog.dart';
+import 'package:foodresq/controller/auth_controller.dart';
+import 'package:foodresq/controller/auth_repository.dart';
 import 'package:foodresq/env.dart';
 import 'package:foodresq/main_local.dart';
 import 'package:foodresq/models/custom_exception.dart';
 import 'package:foodresq/models/ingredient_model.dart';
+import 'package:foodresq/models/user_model.dart';
 import 'package:foodresq/screen/add_ingredient.dart';
+import 'package:foodresq/screen/auth/sign_in.dart';
 import 'package:foodresq/screen/home.dart';
+import 'package:foodresq/screen/ingredient_listing_repository.dart';
 import 'package:get/get.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
-class IngredientListingPage extends StatefulWidget {
+final ingredientListingRepositoryProvider =
+    Provider<IngredientRepository>((ref) => IngredientRepository(ref.read));
+
+class IngredientListingPage extends HookConsumerWidget {
   static String routeName = "/ingredient";
   const IngredientListingPage({Key? key}) : super(key: key);
-
+  
   @override
-  _IngredientListingPageState createState() => _IngredientListingPageState();
-}
-
-class _IngredientListingPageState extends State<IngredientListingPage> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: ColourConstant.kBackgroundColor,
       extendBodyBehindAppBar: true,
@@ -39,6 +44,25 @@ class _IngredientListingPageState extends State<IngredientListingPage> {
           ),
         ),
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.exit_to_app),
+            color: ColourConstant.kGreyColor,
+            onPressed: () {
+              showLogoutDialog(
+                context: context,
+                confirmEvent: () {
+                  ref.read(authControllerProvider.notifier).signOut();
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    SignInScreen.routeName,
+                    ModalRoute.withName('/'),
+                  );
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: SafeArea(
         child: LayoutBuilder(builder: (context, constraint) {
@@ -54,7 +78,7 @@ class _IngredientListingPageState extends State<IngredientListingPage> {
             child: Container(
               width: double.infinity,
               child: FutureBuilder(
-                future: retrieveIngredients(userID),
+                future: ref.read(ingredientListingRepositoryProvider).retrieveIngredients(),
                 builder: (context, AsyncSnapshot snapshot) {
                   if (!snapshot.hasData) {
                     return Center(
@@ -240,10 +264,7 @@ class _IngredientListingPageState extends State<IngredientListingPage> {
                                                                           success =
                                                                           false;
 
-                                                                      success = await deleteIngredients(snapshot
-                                                                          .data[
-                                                                              index]
-                                                                          .id);
+                                                                      success = await ref.read(ingredientListingRepositoryProvider).deleteIngredients(snapshot.data[index].id);
 
                                                                       if (success) {
                                                                         Navigator.pushNamedAndRemoveUntil(
@@ -321,69 +342,69 @@ class _IngredientListingPageState extends State<IngredientListingPage> {
   }
 }
 
-@override
-Future<List<Ingredient>> retrieveIngredients(int userId) async {
-  final String apiRoute = 'ingredient/$userId';
+// @override
+// Future<List<Ingredient>> retrieveIngredients() async {
 
-  var url = Uri.parse(env!.baseUrl + apiRoute);
+//   final String apiRoute = 'ingredient/$id';
+//   var url = Uri.parse(env!.baseUrl + apiRoute);
 
-  print('Requesting to $url');
+//   print('Requesting to $url');
 
-  var response = await http.get(
-    url,
-    headers: {
-      "Accept": "application/json",
-      "Content-Type": "application/json",
-    },
-  );
+//   var response = await http.get(
+//     url,
+//     headers: {
+//       "Accept": "application/json",
+//       "Content-Type": "application/json",
+//     },
+//   );
 
-  print('Response status: ${response.statusCode}');
-  print('Response body: ${response.body}');
+//   print('Response status: ${response.statusCode}');
+//   print('Response body: ${response.body}');
 
-  var responseBody = response.body;
+//   var responseBody = response.body;
 
-  if (response.statusCode == 200) {
-    final results = List<Map<String, dynamic>>.from(json.decode(responseBody));
+//   if (response.statusCode == 200) {
+//     final results = List<Map<String, dynamic>>.from(json.decode(responseBody));
 
-    List<Ingredient> items =
-        results.map((item) => Ingredient.fromMap(item)).toList(growable: false);
+//     List<Ingredient> items =
+//         results.map((item) => Ingredient.fromMap(item)).toList(growable: false);
 
-    return items;
-  } else {
-    throw CustomException(message: 'Failed to retrieve ingredients!');
-  }
-}
+//     return items;
+//   } else {
+//     throw CustomException(message: 'Failed to retrieve ingredients!');
+//   }
+// }
 
-@override
-Future<bool> deleteIngredients(int ingId) async {
-  final String apiRoute = 'ingredientDelete/$ingId';
+// @override
+// Future<bool> deleteIngredients(int ingId) async {
+//   final String apiRoute = 'ingredientDelete/$ingId';
 
-  var url = Uri.parse(env!.baseUrl + apiRoute);
+//   var url = Uri.parse(env!.baseUrl + apiRoute);
 
-  print('Requesting to $url');
+//   print('Requesting to $url');
 
-  var response = await http.delete(
-    url,
-    headers: {
-      "Accept": "application/json",
-      "Content-Type": "application/json",
-    },
-  );
+//   var response = await http.delete(
+//     url,
+//     headers: {
+//       "Accept": "application/json",
+//       "Content-Type": "application/json",
+//     },
+//   );
 
-  print('Response status: ${response.statusCode}');
-  print('Response body: ${response.body}');
+//   print('Response status: ${response.statusCode}');
+//   print('Response body: ${response.body}');
 
-  var responseBody = response.body;
+//   var responseBody = response.body;
 
-  if (response.statusCode == 200) {
-    return true;
-  } else if (response.statusCode == 422) {
-    throw CustomException.fromJson(
-        jsonDecode(responseBody) as Map<String, dynamic>);
-  } else {
-    throw CustomException(message: 'Failed to delete ingredient!');
-  }
-}
+//   if (response.statusCode == 200) {
+//     return true;
+//   } else if (response.statusCode == 422) {
+//     throw CustomException.fromJson(
+//         jsonDecode(responseBody) as Map<String, dynamic>);
+//   } else {
+//     throw CustomException(message: 'Failed to delete ingredient!');
+//   }
+// }
 
 String reformatDate(
     {required String date,

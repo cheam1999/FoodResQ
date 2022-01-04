@@ -9,11 +9,16 @@ import 'package:foodresq/main_local.dart';
 import 'package:foodresq/models/custom_exception.dart';
 import 'package:foodresq/screen/home.dart';
 import 'package:foodresq/screen/ingredient_listing.dart';
+import 'package:foodresq/screen/ingredient_listing_repository.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:tflite/tflite.dart';
 import 'package:get/get.dart';
+
+final ingredientListingRepositoryProvider =
+    Provider<IngredientRepository>((ref) => IngredientRepository(ref.read));
 
 class AddIngredientPage extends StatefulWidget {
   static String routeName = "/addIngredient";
@@ -21,19 +26,20 @@ class AddIngredientPage extends StatefulWidget {
 
   final String title;
 
-  @override
   State<AddIngredientPage> createState() => _AddIngredientPageState();
 }
 
+List? _outputs;
+File? _image;
+bool _loading = false;
+
+//_AddIngredientPageState(this._read);
+
+TextEditingController ingredientController = TextEditingController();
+TextEditingController dateController = TextEditingController();
+DateTime _selectedDate = DateTime.now();
+
 class _AddIngredientPageState extends State<AddIngredientPage> {
-  List? _outputs;
-  File? _image;
-  bool _loading = false;
-
-  TextEditingController ingredientController = TextEditingController();
-  TextEditingController dateController = TextEditingController();
-  DateTime _selectedDate = DateTime.now();
-
   @override
   void initState() {
     super.initState();
@@ -218,32 +224,7 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
                                       ),
                                     ),
                                   ),
-                                  actions: [
-                                    ElevatedButton(
-                                      child: Text("Save"),
-                                      onPressed: () async {
-                                        var ingredient =
-                                            ingredientController.text;
-
-                                        bool success = false;
-
-                                        //userID hard code
-                                        success = await saveIngredient(
-                                            userID, ingredient, _selectedDate);
-
-                                        if (success) {
-                                          Navigator.pushNamedAndRemoveUntil(
-                                              context,
-                                              HomeScreen.routeName,
-                                              ModalRoute.withName('/'));
-                                        } else
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                                  content: const Text(
-                                                      'Fail to save!')));
-                                      },
-                                    )
-                                  ],
+                                  actions: [addIngredient2()],
                                 );
                               },
                             );
@@ -405,38 +386,7 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
                             SizedBox(height: 20),
                             Container(
                               width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  bool success = false;
-
-                                  //userID hard code
-                                  success = await saveIngredient(
-                                      userID, _outputs![0]["label"], _selectedDate);
-
-                                  if (success) {
-                                    Navigator.pushNamedAndRemoveUntil(
-                                        context,
-                                        HomeScreen.routeName,
-                                        ModalRoute.withName('/'));
-                                  } else
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                            content:
-                                                const Text('Fail to save!')));
-                                },
-                                child: Text(
-                                  "Confirm & Save",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                          Colors.orange.shade800),
-                                ),
-                              ),
+                              child: addIngredient(),
                             ),
                           ],
                         )
@@ -461,64 +411,67 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
   }
 }
 
-// save ingredient api
-@override
-Future<bool> saveIngredient(
-    int userId, String ingredientName, DateTime expiryDate) async {
-  final String apiRoute = 'save_ingredient';
+class addIngredient extends HookConsumerWidget {
+  const addIngredient({Key? key}) : super(key: key);
 
-  DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
-  String expiryDateString = dateFormat.format(expiryDate);
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // TODO: implement build
+    return ElevatedButton(
+      onPressed: () async {
+        bool success = false;
 
-  print(expiryDateString);
+        //userID hard code
+        success = await ref
+            .read(ingredientListingRepositoryProvider)
+            .saveIngredient(_outputs![0]["label"], _selectedDate);
 
-  var url = Uri.parse(env!.baseUrl + apiRoute);
-  //var url = Uri.parse('http://127.0.0.1:8000/api/' + apiRoute);
-
-  print('Requesting to $url');
-
-  var response = await http.post(
-    url,
-    headers: {
-      "Accept": "application/json",
-      "Content-Type": "application/json",
-    },
-    body: jsonEncode({
-      'user_id': userId,
-      'ingredient_name': ingredientName,
-      'expiry_date': expiryDateString
-    }),
-  );
-
-  print('Response status: ${response.statusCode}');
-  print('Response body: ${response.body}');
-
-  var responseBody = response.body;
-
-  if (response.statusCode == 200) {
-    return true;
-  } else if (response.statusCode == 422) {
-    throw CustomException.fromJson(
-        jsonDecode(responseBody) as Map<String, dynamic>);
-  } else {
-    throw CustomException(message: 'Failed to save ingredient!');
+        if (success) {
+          Navigator.pushNamedAndRemoveUntil(
+              context, HomeScreen.routeName, ModalRoute.withName('/'));
+        } else
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: const Text('Fail to save!')));
+      },
+      child: Text(
+        "Confirm & Save",
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+      ),
+      style: ButtonStyle(
+        backgroundColor:
+            MaterialStateProperty.all<Color>(Colors.orange.shade800),
+      ),
+    );
   }
 }
 
-//   //Text Recognition
-//   readTextFromImage() async {
-//     result = '';
-//     FirebaseVisionImage myImage = FirebaseVisionImage.fromFile(pickedImage);
-//     TextRecognizer recognizeText = FirebaseVision.instance.textRecognizer();
-//     VisionText readText = await recognizeText.processImage(myImage);
+class addIngredient2 extends HookConsumerWidget {
+  const addIngredient2({Key? key}) : super(key: key);
 
-//     for (TextBlock block in readText.blocks) {
-//       for (TextLine line in block.lines) {
-//         for (TextElement word in line.elements) {
-//           setState(() {
-//             result = result + ' ' + word.text;
-//           });
-//         }
-//       }
-//     }
-//   }
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // TODO: implement build
+    return ElevatedButton(
+      child: Text("Save"),
+      onPressed: () async {
+        var ingredient = ingredientController.text;
+
+        bool success = false;
+
+        //userID hard code
+        success = await ref.read(ingredientListingRepositoryProvider)
+            .saveIngredient(ingredient, _selectedDate);
+
+        if (success) {
+          Navigator.pushNamedAndRemoveUntil(
+              context, HomeScreen.routeName, ModalRoute.withName('/'));
+        } else
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: const Text('Fail to save!')));
+      },
+    );
+  }
+}

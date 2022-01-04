@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:foodresq/utilities/user_shared_preferences.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-
 import 'env.dart';
 import 'main_common.dart';
 
@@ -18,9 +17,9 @@ Future main() async {
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   var url = Platform.isAndroid
-      ? 'http://192.168.0.102:8000/api/'
+      ? 'http://192.168.0.122:8000/api/'
       //? 'http://10.0.2.2:8000/foodresq-api/'
-      : 'http://localhost/foodresq-api/'; 
+      : 'http://localhost/foodresq-api/';
 
   BuildEnvironment.init(flavor: BuildFlavor.local, baseUrl: url);
   assert(env != null);

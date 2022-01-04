@@ -44,6 +44,8 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
   void initState() {
     super.initState();
     _loading = true;
+    _outputs = null;
+    _image = null;
 
     loadModel().then((value) {
       setState(() {
@@ -78,7 +80,6 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
   @override
   void dispose() {
     Tflite.close();
-    //dateController.dispose();
     super.dispose();
   }
 
@@ -237,7 +238,10 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
                               },
                             );
                           },
-                        );
+                        ).then((value) {
+                          dateController.clear();
+                          ingredientController.clear();
+                        });
                       },
                       icon: Icon(Icons.edit),
                       label: Text("Add Ingredient Manually"),
@@ -481,6 +485,8 @@ class addIngredient2 extends HookConsumerWidget {
         if (success) {
           Navigator.pushNamedAndRemoveUntil(
               context, HomeScreen.routeName, ModalRoute.withName('/'));
+          dateController.clear();
+          ingredientController.clear();
         } else
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: const Text('Fail to save!')));

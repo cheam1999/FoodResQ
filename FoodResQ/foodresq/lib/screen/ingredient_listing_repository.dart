@@ -3,6 +3,7 @@ import 'package:foodresq/controller/auth_controller.dart';
 import 'package:foodresq/env.dart';
 import 'package:foodresq/models/custom_exception.dart';
 import 'package:foodresq/models/ingredient_model.dart';
+import 'package:foodresq/utilities/user_shared_preferences.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -19,6 +20,7 @@ class IngredientRepository implements BaseIngredientRepository {
   @override
   Future<List<Ingredient>> retrieveIngredients() async {
     final int id = _read(authControllerProvider).id!;
+    String? _accesToken = await UserSharedPreferences.getAccessToken() ?? null;
     final String apiRoute = 'ingredient/$id';
     var url = Uri.parse(env!.baseUrl + apiRoute);
 
@@ -29,6 +31,7 @@ class IngredientRepository implements BaseIngredientRepository {
       headers: {
         "Accept": "application/json",
         "Content-Type": "application/json",
+        'Authorization': 'Bearer $_accesToken',
       },
     );
 
@@ -54,6 +57,7 @@ class IngredientRepository implements BaseIngredientRepository {
   @override
   Future<bool> deleteIngredients(int ingId) async {
     final String apiRoute = 'ingredientDelete/$ingId';
+    String? _accesToken = await UserSharedPreferences.getAccessToken() ?? null;
     var url = Uri.parse(env!.baseUrl + apiRoute);
 
     print('Requesting to $url');
@@ -63,6 +67,7 @@ class IngredientRepository implements BaseIngredientRepository {
       headers: {
         "Accept": "application/json",
         "Content-Type": "application/json",
+        'Authorization': 'Bearer $_accesToken'
       },
     );
 
@@ -85,6 +90,7 @@ class IngredientRepository implements BaseIngredientRepository {
   Future<bool> saveIngredient(
       String ingredientName, DateTime expiryDate) async {
     final int userId = _read(authControllerProvider).id!;
+    String? _accesToken = await UserSharedPreferences.getAccessToken() ?? null;
     final String apiRoute = 'save_ingredient';
 
     DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
@@ -102,6 +108,7 @@ class IngredientRepository implements BaseIngredientRepository {
       headers: {
         "Accept": "application/json",
         "Content-Type": "application/json",
+        'Authorization': 'Bearer $_accesToken'
       },
       body: jsonEncode({
         'user_id': userId,
@@ -130,6 +137,7 @@ class IngredientRepository implements BaseIngredientRepository {
   Future<bool> consumedIngredient(
       String ingredientName, String expiryDate) async {
     final int userId = _read(authControllerProvider).id!;
+    String? _accesToken = await UserSharedPreferences.getAccessToken() ?? null;
     final String apiRoute = 'consumed_ingredient';
 
     // DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
@@ -147,6 +155,7 @@ class IngredientRepository implements BaseIngredientRepository {
       headers: {
         "Accept": "application/json",
         "Content-Type": "application/json",
+        'Authorization': 'Bearer $_accesToken'
       },
       body: jsonEncode({
         'user_id': userId,
@@ -170,4 +179,3 @@ class IngredientRepository implements BaseIngredientRepository {
     }
   }
 }
-

@@ -16,111 +16,158 @@ class IngredientRepository implements BaseIngredientRepository {
   final Reader _read;
   const IngredientRepository(this._read);
 
-@override
-Future<List<Ingredient>> retrieveIngredients() async {
+  @override
+  Future<List<Ingredient>> retrieveIngredients() async {
+    final int id = _read(authControllerProvider).id!;
+    final String apiRoute = 'ingredient/$id';
+    var url = Uri.parse(env!.baseUrl + apiRoute);
 
-  final int id =  _read(authControllerProvider).id!;
-  final String apiRoute = 'ingredient/$id';
-  var url = Uri.parse(env!.baseUrl + apiRoute);
+    print('Requesting to $url');
 
-  print('Requesting to $url');
+    var response = await http.get(
+      url,
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+      },
+    );
 
-  var response = await http.get(
-    url,
-    headers: {
-      "Accept": "application/json",
-      "Content-Type": "application/json",
-    },
-  );
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
 
-  print('Response status: ${response.statusCode}');
-  print('Response body: ${response.body}');
+    var responseBody = response.body;
 
-  var responseBody = response.body;
+    if (response.statusCode == 200) {
+      final results =
+          List<Map<String, dynamic>>.from(json.decode(responseBody));
 
-  if (response.statusCode == 200) {
-    final results = List<Map<String, dynamic>>.from(json.decode(responseBody));
+      List<Ingredient> items = results
+          .map((item) => Ingredient.fromMap(item))
+          .toList(growable: false);
 
-    List<Ingredient> items =
-        results.map((item) => Ingredient.fromMap(item)).toList(growable: false);
+      return items;
+    } else {
+      throw CustomException(message: 'Failed to retrieve ingredients!');
+    }
+  }
 
-    return items;
-  } else {
-    throw CustomException(message: 'Failed to retrieve ingredients!');
+  @override
+  Future<bool> deleteIngredients(int ingId) async {
+    final String apiRoute = 'ingredientDelete/$ingId';
+    var url = Uri.parse(env!.baseUrl + apiRoute);
+
+    print('Requesting to $url');
+
+    var response = await http.delete(
+      url,
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+      },
+    );
+
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    var responseBody = response.body;
+
+    if (response.statusCode == 200) {
+      return true;
+    } else if (response.statusCode == 422) {
+      throw CustomException.fromJson(
+          jsonDecode(responseBody) as Map<String, dynamic>);
+    } else {
+      throw CustomException(message: 'Failed to delete ingredient!');
+    }
+  }
+
+  @override
+  Future<bool> saveIngredient(
+      String ingredientName, DateTime expiryDate) async {
+    final int userId = _read(authControllerProvider).id!;
+    final String apiRoute = 'save_ingredient';
+
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+    String expiryDateString = dateFormat.format(expiryDate);
+
+    print(expiryDateString);
+
+    var url = Uri.parse(env!.baseUrl + apiRoute);
+    //var url = Uri.parse('http://127.0.0.1:8000/api/' + apiRoute);
+
+    print('Requesting to $url');
+
+    var response = await http.post(
+      url,
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode({
+        'user_id': userId,
+        'ingredient_name': ingredientName,
+        'expiry_date': expiryDateString
+      }),
+    );
+
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    var responseBody = response.body;
+
+    if (response.statusCode == 200) {
+      return true;
+    } else if (response.statusCode == 422) {
+      throw CustomException.fromJson(
+          jsonDecode(responseBody) as Map<String, dynamic>);
+    } else {
+      throw CustomException(message: 'Failed to save ingredient!');
+    }
+  }
+
+  // consumed ingredient api
+  @override
+  Future<bool> consumedIngredient(
+      String ingredientName, String expiryDate) async {
+    final int userId = _read(authControllerProvider).id!;
+    final String apiRoute = 'consumed_ingredient';
+
+    // DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+    // String expiryDateString = dateFormat.format(expiryDate);
+
+    // print(expiryDateString);
+
+    var url = Uri.parse(env!.baseUrl + apiRoute);
+    //var url = Uri.parse('http://127.0.0.1:8000/api/' + apiRoute);
+
+    print('Requesting to $url');
+
+    var response = await http.post(
+      url,
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode({
+        'user_id': userId,
+        'ingredient_name': ingredientName,
+        'expiry_date': expiryDate
+      }),
+    );
+
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    var responseBody = response.body;
+
+    if (response.statusCode == 200) {
+      return true;
+    } else if (response.statusCode == 422) {
+      throw CustomException.fromJson(
+          jsonDecode(responseBody) as Map<String, dynamic>);
+    } else {
+      throw CustomException(message: 'Failed!');
+    }
   }
 }
 
-@override
-Future<bool> deleteIngredients(int ingId) async {
-
-  final String apiRoute = 'ingredientDelete/$ingId';
-  var url = Uri.parse(env!.baseUrl + apiRoute);
-
-  print('Requesting to $url');
-
-  var response = await http.delete(
-    url,
-    headers: {
-      "Accept": "application/json",
-      "Content-Type": "application/json",
-    },
-  );
-
-  print('Response status: ${response.statusCode}');
-  print('Response body: ${response.body}');
-
-  var responseBody = response.body;
-
-  if (response.statusCode == 200) {
-    return true;
-  } else if (response.statusCode == 422) {
-    throw CustomException.fromJson(
-        jsonDecode(responseBody) as Map<String, dynamic>);
-  } else {
-    throw CustomException(message: 'Failed to delete ingredient!');
-  }
-}
-
-@override
-Future<bool> saveIngredient(String ingredientName, DateTime expiryDate) async {
-  final int userId =  _read(authControllerProvider).id!;
-  final String apiRoute = 'save_ingredient';
-
-  DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
-  String expiryDateString = dateFormat.format(expiryDate);
-
-  print(expiryDateString);
-
-  var url = Uri.parse(env!.baseUrl + apiRoute);
-  //var url = Uri.parse('http://127.0.0.1:8000/api/' + apiRoute);
-
-  print('Requesting to $url');
-
-  var response = await http.post(
-    url,
-    headers: {
-      "Accept": "application/json",
-      "Content-Type": "application/json",
-    },
-    body: jsonEncode({
-      'user_id': userId,
-      'ingredient_name': ingredientName,
-      'expiry_date': expiryDateString
-    }),
-  );
-
-  print('Response status: ${response.statusCode}');
-  print('Response body: ${response.body}');
-
-  var responseBody = response.body;
-
-  if (response.statusCode == 200) {
-    return true;
-  } else if (response.statusCode == 422) {
-    throw CustomException.fromJson(
-        jsonDecode(responseBody) as Map<String, dynamic>);
-  } else {
-    throw CustomException(message: 'Failed to save ingredient!');
-  }
-}
-}

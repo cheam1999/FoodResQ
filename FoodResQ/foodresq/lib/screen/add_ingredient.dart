@@ -44,6 +44,8 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
   void initState() {
     super.initState();
     _loading = true;
+    _outputs = null;
+    _image = null;
 
     loadModel().then((value) {
       setState(() {
@@ -78,7 +80,6 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
   @override
   void dispose() {
     Tflite.close();
-    //dateController.dispose();
     super.dispose();
   }
 
@@ -145,8 +146,8 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
                       icon: Icon(Icons.camera),
                       label: Text("Camera"),
                       style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.brown),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            ColourConstant.kButtonColor),
                       ),
                     ),
                     ElevatedButton.icon(
@@ -156,8 +157,8 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
                       icon: Icon(Icons.image),
                       label: Text("Gallery"),
                       style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.brown),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            ColourConstant.kButtonColor),
                       ),
                     ),
                     SizedBox(
@@ -186,7 +187,12 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
                               builder: (context, setState) {
                                 return AlertDialog(
                                   scrollable: true,
-                                  title: Text('Add Ingredient Manually'),
+                                  title: Text(
+                                    'Add Ingredient Manually',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                    ),
+                                  ),
                                   content: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Form(
@@ -198,6 +204,9 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
                                               labelText: 'Ingredient',
                                               icon: Icon(Icons.fastfood),
                                             ),
+                                          ),
+                                          SizedBox(
+                                            height: 20.0,
                                           ),
                                           TextFormField(
                                             controller: dateController,
@@ -229,13 +238,16 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
                               },
                             );
                           },
-                        );
+                        ).then((value) {
+                          dateController.clear();
+                          ingredientController.clear();
+                        });
                       },
                       icon: Icon(Icons.edit),
                       label: Text("Add Ingredient Manually"),
                       style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.brown),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            ColourConstant.kButtonColor),
                       ),
                     ),
                     SizedBox(
@@ -248,8 +260,8 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
                       icon: Icon(Icons.close),
                       label: Text("Cancel"),
                       style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.brown),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            ColourConstant.kButtonColor),
                       ),
                     ),
                   ],
@@ -405,7 +417,7 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
           size: 20,
           color: Colors.white,
         ),
-        backgroundColor: Colors.brown,
+        backgroundColor: ColourConstant.kButtonColor,
       ),
     );
   }
@@ -442,7 +454,7 @@ class addIngredient extends HookConsumerWidget {
       ),
       style: ButtonStyle(
         backgroundColor:
-            MaterialStateProperty.all<Color>(Colors.orange.shade800),
+            MaterialStateProperty.all<Color>(ColourConstant.kButtonColor),
       ),
     );
   }
@@ -455,6 +467,10 @@ class addIngredient2 extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // TODO: implement build
     return ElevatedButton(
+      style: ButtonStyle(
+        backgroundColor:
+            MaterialStateProperty.all<Color>(ColourConstant.kButtonColor),
+      ),
       child: Text("Save"),
       onPressed: () async {
         var ingredient = ingredientController.text;
@@ -462,12 +478,15 @@ class addIngredient2 extends HookConsumerWidget {
         bool success = false;
 
         //userID hard code
-        success = await ref.read(ingredientListingRepositoryProvider)
+        success = await ref
+            .read(ingredientListingRepositoryProvider)
             .saveIngredient(ingredient, _selectedDate);
 
         if (success) {
           Navigator.pushNamedAndRemoveUntil(
               context, HomeScreen.routeName, ModalRoute.withName('/'));
+          dateController.clear();
+          ingredientController.clear();
         } else
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: const Text('Fail to save!')));

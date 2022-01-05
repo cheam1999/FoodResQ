@@ -15,7 +15,7 @@ class _StartScreenState extends ConsumerState<StartScreen> {
   // PageController _pageController = PageController();
   // int _selectedIndex = 0;
 
-  // List<Widget> _screens = [IngredientScreen(), RecipeScreen(), ProfileScreen()];
+  // List<Widget> _screens = [IngredientScreen(), SelectIngredientPage(), ProfileScreen()];
 
   bool isLoading = true;
 

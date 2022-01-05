@@ -98,42 +98,48 @@ class _IngredientListingPageState extends State<IngredientListingPage> {
                                         children: [
                                           Expanded(
                                             flex: 2,
-                                            child: Container(
-                                              height: 100,
-                                              width: 100,
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                  color: calculateDaysLeft(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(5.0),
+                                              child: Container(
+                                                height: 100,
+                                                width: 100,
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                    color: calculateDaysLeft(
+                                                                date: snapshot
+                                                                    .data[index]
+                                                                    .expiryDate) >
+                                                            3
+                                                        ? Colors.green
+                                                        : calculateDaysLeft(
+                                                                    date: snapshot
+                                                                        .data[
+                                                                            index]
+                                                                        .expiryDate) >=
+                                                                0
+                                                            ? Colors.orange
+                                                            : Colors.red,
+                                                  ),
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: Center(
+                                                  child: calculateDaysLeft(
                                                               date: snapshot
                                                                   .data[index]
                                                                   .expiryDate) >
                                                           3
-                                                      ? Colors.green
+                                                      ? Text("Good")
                                                       : calculateDaysLeft(
                                                                   date: snapshot
                                                                       .data[
                                                                           index]
                                                                       .expiryDate) >=
                                                               0
-                                                          ? Colors.orange
-                                                          : Colors.red,
+                                                          ? Text(
+                                                              "Expire \n Soon")
+                                                          : Text("Expired"),
                                                 ),
-                                                shape: BoxShape.circle,
-                                              ),
-                                              child: Center(
-                                                child: calculateDaysLeft(
-                                                            date: snapshot
-                                                                .data[index]
-                                                                .expiryDate) >
-                                                        3
-                                                    ? Text("Good")
-                                                    : calculateDaysLeft(
-                                                                date: snapshot
-                                                                    .data[index]
-                                                                    .expiryDate) >=
-                                                            0
-                                                        ? Text("Expire \n Soon")
-                                                        : Text("Expired"),
                                               ),
                                             ),
                                           ),

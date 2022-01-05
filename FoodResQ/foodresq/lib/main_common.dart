@@ -3,6 +3,8 @@ import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:foodresq/routes.dart';
 import 'package:foodresq/screen/home.dart';
 import 'package:foodresq/screen/introduction.dart';
+import 'package:foodresq/screen/recipes_listing.dart';
+import 'package:foodresq/screen/select_ingredient.dart';
 import 'package:foodresq/screen/start.dart';
 import 'package:foodresq/theme.dart';
 import 'package:get/get.dart';

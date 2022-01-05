@@ -4,7 +4,7 @@ import 'package:foodresq/constants/colour_constant.dart';
 import 'package:foodresq/screen/add_ingredient.dart';
 import 'package:foodresq/screen/ingredient_listing.dart';
 import 'package:foodresq/screen/profile.dart';
-import 'package:foodresq/screen/recipe.dart';
+import 'package:foodresq/screen/select_ingredient.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<Widget> _screens = [
     IngredientListingPage(),
-    RecipeScreen(),
+    SelectIngredientPage(),
     ProfileScreen()
   ];
 

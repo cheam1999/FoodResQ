@@ -24,20 +24,20 @@ import 'ingredient_listing.dart';
 
 class SelectIngredientPage extends StatefulWidget {
   static String routeName = "/selectIngredient";
-  // final bool isMultiSelection;
+  final bool isMultiSelection;
   const SelectIngredientPage({
     Key? key,
-    // this.isMultiSelection = true,
+    this.isMultiSelection = true,
   }) : super(key: key);
 
-  BuildContext get context => context;
+  // BuildContext get context => context;
 
   @override
   _SelectIngredientPageState createState() => _SelectIngredientPageState();
 }
 
 class _SelectIngredientPageState extends State<SelectIngredientPage> {
-  // List<Ingredient> selectedIngredients = [];
+  List<Ingredient> selectedIngredients = [];
 
   @override
   void initState() {
@@ -62,77 +62,118 @@ class _SelectIngredientPageState extends State<SelectIngredientPage> {
         elevation: 0,
       ),
       body: SafeArea(child: LayoutBuilder(builder: (context, constraint) {
-        return Container(
-            width: double.infinity,
-            padding: EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 30.0),
-            constraints: BoxConstraints.expand(),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.5),
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-            ),
-            child: Container(
-              width: double.infinity,
-              child: FutureBuilder(
-                future: retrieveIngredients(userID),
-                builder: (context, AsyncSnapshot snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(
-                      child: Text(
-                        "",
-                        style: TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                    );
-                  } else {
-                    return Container(
-                      child: RefreshIndicator(
-                        onRefresh: () async {},
-                        child: ListView.builder(
-                          itemCount: snapshot.data.length,
-                          scrollDirection: Axis.vertical,
-                          itemBuilder: (BuildContext context, int index) {
-                            // final isSelected = selectedIngredients
-                            //     .contains(snapshot.data[index]);
-                            return IngredientListTileWidget(
-                              ingredients: snapshot.data[index],
-                              isSelected: false,
-                              onSelectedIngredient: selectIngredient,
-                            );
-                          },
-                        ),
-                      ),
-                    );
-                  }
-                },
+        return Column(
+          children: [
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 30.0),
+                constraints: BoxConstraints.expand(),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.5),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20)),
+                ),
+                child: Container(
+                  width: double.infinity,
+                  child: FutureBuilder(
+                    future: retrieveIngredients(userID),
+                    builder: (context, AsyncSnapshot snapshot) {
+                      if (!snapshot.hasData) {
+                        return Center(
+                          child: Text(
+                            "",
+                            style: TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                        );
+                      } else {
+                        return Container(
+                          child: RefreshIndicator(
+                            onRefresh: () async {},
+                            child: ListView.builder(
+                              itemCount: snapshot.data.length,
+                              scrollDirection: Axis.vertical,
+                              itemBuilder: (BuildContext context, int index) {
+                                final isSelected = selectedIngredients
+                                    .contains(snapshot.data[index]);
+                                return IngredientListTileWidget(
+                                  ingredients: snapshot.data[index],
+                                  isSelected: isSelected,
+                                  onSelectedIngredient: selectIngredient,
+                                );
+                              },
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ),
               ),
-            ));
+            ),
+            buildSelectButton(context),
+          ],
+        );
       })),
     );
   }
 
   void selectIngredient(Ingredient ingredient) {
-    // if (widget.isMultiSelection) {
-    //   final isSelected = selectedIngredients.contains(ingredient);
-    //   setState(() {
-    //     isSelected
-    //         ? selectedIngredients.remove(ingredient)
-    //         : selectedIngredients.add(ingredient);
-    //   });
-    // } else {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => RecipeListingPage(
-                title: 'Recipe List',
-                ingredients: ingredient,
-              )),
-    );
-    // }
+    if (widget.isMultiSelection) {
+      final isSelected = selectedIngredients.contains(ingredient);
+      print(ingredient);
+      setState(() {
+        isSelected
+            ? selectedIngredients.remove(ingredient)
+            : selectedIngredients.add(ingredient);
+      });
+    } else {
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //       builder: (context) => RecipeListingPage(
+      //             title: 'Recipe List',
+      //             ingredients: ingredient,
+      //           )),
+      // );
+    }
 
     print(ingredient);
   }
+
+  buildSelectButton(BuildContext context) {
+    final label = widget.isMultiSelection
+        ? "Select ${selectedIngredients.length} Ingredient(s)"
+        : "Generate Recipe";
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+      color: Theme.of(context).primaryColor,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          shape: StadiumBorder(),
+          minimumSize: Size.fromHeight(40),
+          primary: Colors.white,
+        ),
+        child: Text(
+          label,
+          style: TextStyle(color: Colors.black, fontSize: 16),
+        ),
+        onPressed: selectedIngredients.isNotEmpty ? submit : null,
+      ),
+    );
+  }
+
+  void submit() => Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => RecipeListingPage(
+                  title: 'Recipes List',
+                  ingredients: selectedIngredients,
+                )),
+      );
 }
 
 // Column(
@@ -207,34 +248,3 @@ class _SelectIngredientPageState extends State<SelectIngredientPage> {
 //         })
 //   ],
 // );
-
-@override
-Future<List<Recipes>> retrieveRecipes() async {
-  final String apiRoute = 'get_recipe';
-  var url = Uri.parse(env!.baseUrl + apiRoute);
-  print("Requesting to $url");
-
-  var response = await http.get(
-    url,
-    headers: {
-      "Accept": "application/json",
-      "Content-Type": "application/json",
-    },
-  );
-
-  print('Response status: ${response.statusCode}');
-  print('Response body: ${response.body}');
-
-  var responseBody = response.body;
-
-  if (response.statusCode == 200) {
-    final results = List<Map<String, dynamic>>.from(json.decode(responseBody));
-
-    List<Recipes> items =
-        results.map((item) => Recipes.fromMap(item)).toList(growable: false);
-
-    return items;
-  } else {
-    throw CustomException(message: 'Failed to retrieve recipe!');
-  }
-}

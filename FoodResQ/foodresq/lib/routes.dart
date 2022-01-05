@@ -15,7 +15,5 @@ final Map<String, WidgetBuilder> routes = {
         title: "Add Ingredient",
       ),
   SelectIngredientPage.routeName: (context) => SelectIngredientPage(),
-  // RecipeListingPage.routeName: (context) =>
-  //     RecipeListingPage(title: "Recipe List"),
   ProfileScreen.routeName: (context) => ProfileScreen(),
 };

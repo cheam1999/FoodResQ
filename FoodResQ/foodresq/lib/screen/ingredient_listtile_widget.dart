@@ -23,48 +23,51 @@ class IngredientListTileWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
-      child: Container(
-        decoration: BoxDecoration(
-            color: Colors.deepOrange.shade50,
-            border: Border.all(
-              color: Colors.grey,
-            ),
-            borderRadius: BorderRadius.all(Radius.circular(20))),
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+    return ListTile(
+        onTap: () => onSelectedIngredient(ingredients),
+        title: Container(
+          padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.deepOrange.shade50,
+                border: Border.all(
+                  color: Colors.grey,
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(20))),
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Expanded(
-                    flex: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        height: 100,
-                        width: 100,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: calculateDaysLeft(
-                                        date: ingredients.expiryDate!) >
-                                    3
-                                ? Colors.green
-                                : calculateDaysLeft(
-                                            date: ingredients.expiryDate!) >=
-                                        0
-                                    ? Colors.orange
-                                    : Colors.red,
-                          ),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Center(
-                          child:
-                              calculateDaysLeft(date: ingredients.expiryDate!) >
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            height: 100,
+                            width: 100,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: calculateDaysLeft(
+                                            date: ingredients.expiryDate!) >
+                                        3
+                                    ? Colors.green
+                                    : calculateDaysLeft(
+                                                date:
+                                                    ingredients.expiryDate!) >=
+                                            0
+                                        ? Colors.orange
+                                        : Colors.red,
+                              ),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Center(
+                              child: calculateDaysLeft(
+                                          date: ingredients.expiryDate!) >
                                       3
                                   ? Text("Good")
                                   : calculateDaysLeft(
@@ -72,89 +75,91 @@ class IngredientListTileWidget extends StatelessWidget {
                                           0
                                       ? Text("Expire \n Soon")
                                       : Text("Expired"),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10.0,
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${ingredients.ingredientName}',
-                          overflow: TextOverflow.ellipsis,
-                          style: isSelected
-                              ? TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.bold,
-                                )
-                              : TextStyle(
-                                  fontSize: 16.0,
-                                ),
-                        ),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        calculateDaysLeft(date: ingredients.expiryDate!) >= 0
-                            ? Text(
-                                "${calculateDaysLeft(date: ingredients.expiryDate!)} days left",
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 12.0,
-                                  color: calculateDaysLeft(
-                                              date: ingredients.expiryDate!) >
-                                          3
-                                      ? Colors.green
-                                      : Colors.orange,
-                                ),
-                              )
-                            : Text(
-                                "Expired ${-calculateDaysLeft(date: ingredients.expiryDate!)} days ago",
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 12.0,
-                                  color: Colors.red,
-                                ),
+                      SizedBox(
+                        width: 10.0,
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${ingredients.ingredientName}',
+                              overflow: TextOverflow.ellipsis,
+                              style: isSelected
+                                  ? TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.green,
+                                      fontWeight: FontWeight.bold,
+                                    )
+                                  : TextStyle(
+                                      fontSize: 16.0,
+                                    ),
+                            ),
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            calculateDaysLeft(date: ingredients.expiryDate!) >=
+                                    0
+                                ? Text(
+                                    "${calculateDaysLeft(date: ingredients.expiryDate!)} days left",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 12.0,
+                                      color: calculateDaysLeft(
+                                                  date:
+                                                      ingredients.expiryDate!) >
+                                              3
+                                          ? Colors.green
+                                          : Colors.orange,
+                                    ),
+                                  )
+                                : Text(
+                                    "Expired ${-calculateDaysLeft(date: ingredients.expiryDate!)} days ago",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 12.0,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            Text(
+                              "Expires on: ${reformatDate(date: ingredients.expiryDate!)}",
+                              style: TextStyle(
+                                fontSize: 10.0,
                               ),
-                        SizedBox(
-                          height: 10.0,
+                            ),
+                          ],
                         ),
-                        Text(
-                          "Expires on: ${reformatDate(date: ingredients.expiryDate!)}",
-                          style: TextStyle(
-                            fontSize: 10.0,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: isSelected
-                        ? IconButton(
-                            icon: Icon(Icons.check_box),
-                            onPressed: () {},
-                          )
-                        : IconButton(
-                            icon: Icon(Icons.check_box_outline_blank),
-                            onPressed: () {
-                              onSelectedIngredient(ingredients);
-                            },
-                          ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: isSelected
+                            ? IconButton(
+                                icon: Icon(Icons.check_box),
+                                onPressed: () {},
+                              )
+                            : IconButton(
+                                icon: Icon(Icons.check_box_outline_blank),
+                                onPressed: () {
+                                  onSelectedIngredient(ingredients);
+                                },
+                              ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 
   // void selectIngredients(Ingredient ingredient) {

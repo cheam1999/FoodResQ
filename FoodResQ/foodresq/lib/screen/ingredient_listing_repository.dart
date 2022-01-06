@@ -124,11 +124,8 @@ class IngredientRepository implements BaseIngredientRepository {
 
     if (response.statusCode == 200) {
       return true;
-    } else if (response.statusCode == 422) {
-      throw CustomException.fromJson(
-          jsonDecode(responseBody) as Map<String, dynamic>);
     } else {
-      throw CustomException(message: 'Failed to save ingredient!');
+      return false;
     }
   }
 

@@ -84,10 +84,24 @@ class IngredientListingPage extends HookConsumerWidget {
                 builder: (context, AsyncSnapshot snapshot) {
                   if (!snapshot.hasData) {
                     return Center(
-                      child: Text(
-                        "",
-                        style: TextStyle(
-                          fontSize: 14,
+                      child: SizedBox(
+                        child: CircularProgressIndicator(
+                          color: ColourConstant.kButtonColor,
+                        ),
+                        height: 50.0,
+                        width: 50.0,
+                      ),
+                    );
+                  } else if (snapshot.hasData && snapshot.data.isEmpty) {
+                    return Center(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            opacity: 0.5,
+                            image:
+                                AssetImage('assets/graphics/FoodResQ-logo.png'),
+                            fit: BoxFit.contain,
+                          ),
                         ),
                       ),
                     );

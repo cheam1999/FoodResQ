@@ -216,12 +216,12 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
                                                   .requestFocus(
                                                       new FocusNode());
 
-                                              // Show Date Picker Here
-                                              await _selectDate(context);
-
                                               dateController.text =
                                                   "${_selectedDate.toLocal()}"
                                                       .split(' ')[0];
+
+                                              // Show Date Picker Here
+                                              await _selectDate(context);
                                             },
                                             decoration: InputDecoration(
                                               labelText: 'Expiry Date',
@@ -433,7 +433,6 @@ class addIngredient extends HookConsumerWidget {
       onPressed: () async {
         bool success = false;
 
-        //userID hard code
         success = await ref
             .read(ingredientListingRepositoryProvider)
             .saveIngredient(_outputs![0]["label"], _selectedDate);
@@ -477,19 +476,24 @@ class addIngredient2 extends HookConsumerWidget {
 
         bool success = false;
 
-        //userID hard code
-        success = await ref
-            .read(ingredientListingRepositoryProvider)
-            .saveIngredient(ingredient, _selectedDate);
+        if (dateController.text != '') {
+          success = await ref
+              .read(ingredientListingRepositoryProvider)
+              .saveIngredient(ingredient, _selectedDate);
+        } else {
+          success = false;
+        }
 
         if (success) {
           Navigator.pushNamedAndRemoveUntil(
               context, HomeScreen.routeName, ModalRoute.withName('/'));
           dateController.clear();
           ingredientController.clear();
-        } else
+        } else {
+          Get.back();
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: const Text('Fail to save!')));
+        }
       },
     );
   }

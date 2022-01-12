@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:foodresq/constants/colour_constant.dart';
+import 'package:foodresq/controller/auth_repository.dart';
 import 'package:foodresq/screen/add_ingredient.dart';
 import 'package:foodresq/screen/ingredient_listing.dart';
 import 'package:foodresq/screen/profile.dart';
@@ -15,9 +16,13 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
+final authRepositoryProvider =
+    Provider<AuthRepository>((ref) => AuthRepository(ref.read));
+
 class _HomeScreenState extends State<HomeScreen> {
   PageController _pageController = PageController();
   int _selectedIndex = 0;
+
 
   List<Widget> _screens = [
     IngredientListingPage(),

@@ -2,7 +2,7 @@
     package="com.example.foodresq"
     android:installLocation="preferExternal">
    <application
-        android:label="foodresq"
+        android:label="FoodResQ"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

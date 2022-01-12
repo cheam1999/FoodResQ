@@ -30,9 +30,13 @@ class IngredientListTileWidget extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
                 color: Colors.deepOrange.shade50,
-                border: Border.all(
-                  color: Colors.grey,
-                ),
+                border: isSelected
+                    ? Border.all(
+                        color: Colors.black,
+                      )
+                    : Border.all(
+                        color: Colors.grey,
+                      ),
                 borderRadius: BorderRadius.all(Radius.circular(20))),
             child: Padding(
               padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
@@ -62,6 +66,7 @@ class IngredientListTileWidget extends StatelessWidget {
                                             0
                                         ? Colors.orange
                                         : Colors.red,
+                                width: isSelected ? 3 : 2,
                               ),
                               shape: BoxShape.circle,
                             ),
@@ -69,12 +74,36 @@ class IngredientListTileWidget extends StatelessWidget {
                               child: calculateDaysLeft(
                                           date: ingredients.expiryDate!) >
                                       3
-                                  ? Text("Good")
+                                  ? Text(
+                                      "Good",
+                                      style: isSelected
+                                          ? TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                            )
+                                          : TextStyle(fontSize: 12),
+                                    )
                                   : calculateDaysLeft(
                                               date: ingredients.expiryDate!) >=
                                           0
-                                      ? Text("Expire \n Soon")
-                                      : Text("Expired"),
+                                      ? Text(
+                                          "Expire \n Soon",
+                                          style: isSelected
+                                              ? TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                )
+                                              : TextStyle(fontSize: 12),
+                                        )
+                                      : Text(
+                                          "Expired",
+                                          style: isSelected
+                                              ? TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                )
+                                              : TextStyle(fontSize: 12),
+                                        ),
                             ),
                           ),
                         ),
@@ -94,7 +123,7 @@ class IngredientListTileWidget extends StatelessWidget {
                               style: isSelected
                                   ? TextStyle(
                                       fontSize: 16,
-                                      color: Colors.green,
+                                      // color: Colors.green,
                                       fontWeight: FontWeight.bold,
                                     )
                                   : TextStyle(
@@ -122,19 +151,31 @@ class IngredientListTileWidget extends StatelessWidget {
                                 : Text(
                                     "Expired ${-calculateDaysLeft(date: ingredients.expiryDate!)} days ago",
                                     overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontSize: 12.0,
-                                      color: Colors.red,
-                                    ),
+                                    style: isSelected
+                                        ? TextStyle(
+                                            fontSize: 12.0,
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.bold,
+                                          )
+                                        : TextStyle(
+                                            fontSize: 12.0,
+                                            color: Colors.red,
+                                          ),
                                   ),
                             SizedBox(
                               height: 10.0,
                             ),
                             Text(
                               "Expires on: ${reformatDate(date: ingredients.expiryDate!)}",
-                              style: TextStyle(
-                                fontSize: 10.0,
-                              ),
+                              style: isSelected
+                                  ? TextStyle(
+                                      fontSize: 10,
+                                      // color: Colors.green,
+                                      fontWeight: FontWeight.bold,
+                                    )
+                                  : TextStyle(
+                                      fontSize: 10.0,
+                                    ),
                             ),
                           ],
                         ),

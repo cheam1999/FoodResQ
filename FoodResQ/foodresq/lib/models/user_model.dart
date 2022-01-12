@@ -3,7 +3,7 @@ import 'dart:convert';
 //TODO: please fix repeat isLogin return null from API
 class User {
   final int? id;
-  final String? fullname;
+  final String? name;
   final String? email;
   final String? accessToken;
   final String? createdAt;
@@ -12,7 +12,7 @@ class User {
   final bool isLogin;
   User({
     this.id,
-    this.fullname,
+    this.name,
     this.email,
     this.accessToken,
     this.createdAt,
@@ -23,7 +23,7 @@ class User {
 
   User copyWith({
     int? id,
-    String? fullname,
+    String? name,
     String? email,
     String? accessToken,
     String? createdAt,
@@ -33,7 +33,7 @@ class User {
   }) {
     return User(
       id: id ?? this.id,
-      fullname: fullname ?? this.fullname,
+      name: name ?? this.name,
       email: email ?? this.email,
       accessToken: accessToken ?? this.accessToken,
       createdAt: createdAt ?? this.createdAt,
@@ -46,7 +46,7 @@ class User {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'fullname': fullname,
+      'name': name,
       'email': email,
       'accessToken': accessToken,
       'createdAt': createdAt,
@@ -59,7 +59,7 @@ class User {
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
       id: map['id'] != null ? checkAndReturnInt(map['id']) : null,
-      fullname: map['fullname'] != null ? map['fullname'] : null,
+      name: map['name'] != null ? map['name'] : null,
       email: map['email'] != null ? map['email'] : null,
       accessToken: map['accessToken'] != null ? map['accessToken'] : null,
       createdAt: map['createdAt'] != null ? map['createdAt'] : null,
@@ -84,7 +84,7 @@ class User {
 
     return other is User &&
         other.id == id &&
-        other.fullname == fullname &&
+        other.name == name &&
         other.email == email &&
         other.accessToken == accessToken &&
         other.createdAt == createdAt &&
@@ -96,7 +96,7 @@ class User {
   @override
   int get hashCode {
     return id.hashCode ^
-        fullname.hashCode ^
+        name.hashCode ^
         email.hashCode ^
         accessToken.hashCode ^
         createdAt.hashCode ^

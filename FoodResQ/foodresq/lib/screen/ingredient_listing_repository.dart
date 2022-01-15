@@ -3,7 +3,9 @@ import 'package:foodresq/controller/auth_controller.dart';
 import 'package:foodresq/env.dart';
 import 'package:foodresq/models/custom_exception.dart';
 import 'package:foodresq/models/ingredient_model.dart';
+import 'package:foodresq/screen/ingredient_listing.dart';
 import 'package:foodresq/utilities/user_shared_preferences.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -47,6 +49,13 @@ class IngredientRepository implements BaseIngredientRepository {
       List<Ingredient> items = results
           .map((item) => Ingredient.fromMap(item))
           .toList(growable: false);
+
+      for (int i = 0; i < items.length; i++) {
+        DateTime date = DateFormat("yyyy-MM-dd").parse(items[i].expiryDate!);
+        if (date.compareTo(DateTime.now()) <= 0) {
+          checkExpired(items[i].id);
+        }
+      }
 
       return items;
     } else {
@@ -162,6 +171,41 @@ class IngredientRepository implements BaseIngredientRepository {
         'ingredient_name': ingredientName,
         'expiry_date': expiryDate
       }),
+    );
+
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    var responseBody = response.body;
+
+    if (response.statusCode == 200) {
+      return true;
+    } else if (response.statusCode == 422) {
+      throw CustomException.fromJson(
+          jsonDecode(responseBody) as Map<String, dynamic>);
+    } else {
+      throw CustomException(message: 'Failed!');
+    }
+  }
+
+  // Check Expired api
+  @override
+  Future<bool> checkExpired(int ing_id) async {
+    final int userId = _read(authControllerProvider).id!;
+    String? _accesToken = await UserSharedPreferences.getAccessToken() ?? null;
+    final String apiRoute = 'check_expired/$ing_id/$userId';
+
+    var url = Uri.parse(env!.baseUrl + apiRoute);
+
+    print('Requesting to $url');
+
+    var response = await http.post(
+      url,
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        'Authorization': 'Bearer $_accesToken'
+      },
     );
 
     print('Response status: ${response.statusCode}');

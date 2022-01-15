@@ -84,7 +84,11 @@ class SignInController extends ChangeNotifier {
     return false;
   }
 
-  void testAuthController() async {
-    await _read(authRepositoryProvider).signOut();
+  Future<String> foodSavedAndWasted() async {
+    return await _read(authControllerProvider.notifier).getFoodSavedAndWaste();
   }
+
+  // void testAuthController() async {
+  //   await _read(authRepositoryProvider).signOut();
+  // }
 }

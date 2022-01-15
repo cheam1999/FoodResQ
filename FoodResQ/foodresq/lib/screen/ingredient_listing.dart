@@ -64,480 +64,424 @@ class IngredientListingPage extends HookConsumerWidget {
           ),
         ],
       ),
-      body: SafeArea(
-        child: LayoutBuilder(builder: (context, constraint) {
-          return Container(
-            width: double.infinity,
-            padding: EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 30.0),
-            constraints: BoxConstraints.expand(),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.5),
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+      body: SizedBox.expand(
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/graphics/background.png"),
+              colorFilter: new ColorFilter.mode(
+                  Colors.white.withOpacity(0.5), BlendMode.dstATop),
+              fit: BoxFit.cover,
             ),
-            child: Container(
-              width: double.infinity,
-              child: FutureBuilder(
-                future: ref
-                    .read(ingredientListingRepositoryProvider)
-                    .retrieveIngredients(),
-                builder: (context, AsyncSnapshot snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(
-                      child: Text(
-                        "",
-                        style: TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                    );
-                  } else {
-                    return Container(
-                      child: RefreshIndicator(
-                        onRefresh: () async {},
-                        child: ListView.builder(
-                          itemCount: snapshot.data.length,
-                          scrollDirection: Axis.vertical,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Container(
-                              padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    color: Colors.deepOrange.shade50,
-                                    border: Border.all(
-                                      color: Colors.grey,
-                                    ),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20))),
-                                child: Padding(
+          ),
+          child: SafeArea(
+            child: LayoutBuilder(builder: (context, constraint) {
+              return Container(
+                width: double.infinity,
+                padding: EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 30.0),
+                constraints: BoxConstraints.expand(),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.5),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20)),
+                ),
+                child: Container(
+                  width: double.infinity,
+                  child: FutureBuilder(
+                    future: ref
+                        .read(ingredientListingRepositoryProvider)
+                        .retrieveIngredients(),
+                    builder: (context, AsyncSnapshot snapshot) {
+                      if (!snapshot.hasData) {
+                        return Center(
+                          child: Text(
+                            "",
+                            style: TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                        );
+                      } else {
+                        return Container(
+                          child: RefreshIndicator(
+                            onRefresh: () async {},
+                            child: ListView.builder(
+                              itemCount: snapshot.data.length,
+                              scrollDirection: Axis.vertical,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Container(
                                   padding:
-                                      EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                      EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: ColourConstant.kContainer,
+                                        border: Border.all(
+                                          color: ColourConstant.kGreyColor,
+                                        ),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(20))),
+                                    child: Padding(
+                                      padding: EdgeInsets.fromLTRB(
+                                          20.0, 0.0, 20.0, 0.0),
+                                      child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [
-                                          Expanded(
-                                            flex: 2,
-                                            child: Container(
-                                              height: 100,
-                                              width: 100,
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                  color: calculateDaysLeft(
-                                                              date: snapshot
-                                                                  .data[index]
-                                                                  .expiryDate) >
-                                                          3
-                                                      ? Colors.green
-                                                      : calculateDaysLeft(
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Expanded(
+                                                flex: 2,
+                                                child: Container(
+                                                  height: 100,
+                                                  width: 100,
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                      color: calculateDaysLeft(
                                                                   date: snapshot
                                                                       .data[
                                                                           index]
-                                                                      .expiryDate) >=
-                                                              0
-                                                          ? Colors.orange
-                                                          : Colors.red,
+                                                                      .expiryDate) >
+                                                              3
+                                                          ? Colors.green
+                                                          : calculateDaysLeft(
+                                                                      date: snapshot
+                                                                          .data[
+                                                                              index]
+                                                                          .expiryDate) >=
+                                                                  0
+                                                              ? Colors.orange
+                                                              : Colors.red,
+                                                    ),
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: Center(
+                                                    child: calculateDaysLeft(
+                                                                date: snapshot
+                                                                    .data[index]
+                                                                    .expiryDate) >
+                                                            3
+                                                        ? Text("Good")
+                                                        : calculateDaysLeft(
+                                                                    date: snapshot
+                                                                        .data[
+                                                                            index]
+                                                                        .expiryDate) >=
+                                                                0
+                                                            ? Text(
+                                                                "Expire \n Soon")
+                                                            : Text("Expired"),
+                                                  ),
                                                 ),
-                                                shape: BoxShape.circle,
                                               ),
-                                              child: Center(
-                                                child: calculateDaysLeft(
-                                                            date: snapshot
-                                                                .data[index]
-                                                                .expiryDate) >
-                                                        3
-                                                    ? Text("Good")
-                                                    : calculateDaysLeft(
+                                              SizedBox(
+                                                width: 10.0,
+                                              ),
+                                              Expanded(
+                                                flex: 3,
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      '${snapshot.data[index].ingredientName}',
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                        fontSize: 16.0,
+                                                        color: ColourConstant
+                                                            .kTextColor,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 10.0,
+                                                    ),
+                                                    calculateDaysLeft(
                                                                 date: snapshot
                                                                     .data[index]
                                                                     .expiryDate) >=
                                                             0
-                                                        ? Text("Expire \n Soon")
-                                                        : Text("Expired"),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 10.0,
-                                          ),
-                                          Expanded(
-                                            flex: 3,
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  '${snapshot.data[index].ingredientName}',
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                    fontSize: 16.0,
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: 10.0,
-                                                ),
-                                                calculateDaysLeft(
-                                                            date: snapshot
-                                                                .data[index]
-                                                                .expiryDate) >=
-                                                        0
-                                                    ? Text(
-                                                        "${calculateDaysLeft(date: snapshot.data[index].expiryDate)} days left",
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        style: TextStyle(
-                                                          fontSize: 12.0,
-                                                          color: calculateDaysLeft(
-                                                                      date: snapshot
-                                                                          .data[
-                                                                              index]
-                                                                          .expiryDate) >
-                                                                  3
-                                                              ? Colors.green
-                                                              : Colors.orange,
-                                                        ),
-                                                      )
-                                                    : Text(
-                                                        "Expired ${-calculateDaysLeft(date: snapshot.data[index].expiryDate)} days ago",
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        style: TextStyle(
-                                                          fontSize: 12.0,
-                                                          color: Colors.red,
-                                                        ),
-                                                      ),
-                                                SizedBox(
-                                                  height: 10.0,
-                                                ),
-                                                Text(
-                                                  "Expires on: ${reformatDate(date: snapshot.data[index].expiryDate)}",
-                                                  style: TextStyle(
-                                                    fontSize: 10.0,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Expanded(
-                                            flex: 1,
-                                            child: IconButton(
-                                              icon: Icon(Icons.restaurant),
-                                              iconSize: 25,
-                                              onPressed: () async {
-                                                showDialog(
-                                                  context: context,
-                                                  builder:
-                                                      (BuildContext context) {
-                                                    return StatefulBuilder(
-                                                      builder:
-                                                          (context, setState) {
-                                                        return AlertDialog(
-                                                          scrollable: true,
-                                                          title: Center(
-                                                            child: Text(
-                                                                'Consume Ingredient'),
+                                                        ? Text(
+                                                            "${calculateDaysLeft(date: snapshot.data[index].expiryDate)} days left",
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style: TextStyle(
+                                                              fontSize: 12.0,
+                                                              color: calculateDaysLeft(
+                                                                          date: snapshot
+                                                                              .data[index]
+                                                                              .expiryDate) >
+                                                                      3
+                                                                  ? Colors.green
+                                                                  : Colors.orange,
+                                                            ),
+                                                          )
+                                                        : Text(
+                                                            "Expired ${-calculateDaysLeft(date: snapshot.data[index].expiryDate)} days ago",
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style: TextStyle(
+                                                              fontSize: 12.0,
+                                                              color: Colors.red,
+                                                            ),
                                                           ),
-                                                          content: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(8.0),
-                                                            child: Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                Text(
-                                                                  "Have you consumed this ingredient?",
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 20.0,
-                                                                ),
-                                                                Row(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .spaceBetween,
+                                                    SizedBox(
+                                                      height: 10.0,
+                                                    ),
+                                                    Text(
+                                                      "Expires on: ${reformatDate(date: snapshot.data[index].expiryDate)}",
+                                                      style: TextStyle(
+                                                        fontSize: 10.0,
+                                                        color: ColourConstant
+                                                            .kTextColor,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Expanded(
+                                                flex: 1,
+                                                child: IconButton(
+                                                  icon: Icon(Icons.restaurant),
+                                                  iconSize: 25,
+                                                  onPressed: () async {
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return StatefulBuilder(
+                                                          builder: (context,
+                                                              setState) {
+                                                            return AlertDialog(
+                                                              scrollable: true,
+                                                              title: Center(
+                                                                child: Text(
+                                                                    'Consume Ingredient'),
+                                                              ),
+                                                              content: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .all(
+                                                                        8.0),
+                                                                child: Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .center,
                                                                   children: [
-                                                                    Expanded(
-                                                                      child:
-                                                                          ElevatedButton(
-                                                                        onPressed:
-                                                                            () async {
-                                                                          bool
-                                                                              successConsume =
-                                                                              false;
-
-                                                                          bool
-                                                                              success =
-                                                                              false;
-
-                                                                          successConsume = await ref.read(ingredientListingRepositoryProvider).consumedIngredient(
-                                                                              snapshot.data[index].ingredientName,
-                                                                              snapshot.data[index].expiryDate);
-
-                                                                          success = await ref
-                                                                              .read(ingredientListingRepositoryProvider)
-                                                                              .deleteIngredients(snapshot.data[index].id);
-
-                                                                          if (success &
-                                                                              successConsume) {
-                                                                            Navigator.pushNamedAndRemoveUntil(
-                                                                                context,
-                                                                                HomeScreen.routeName,
-                                                                                ModalRoute.withName('/'));
-                                                                          } else
-                                                                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: const Text('Fail to consume!')));
-                                                                        },
-                                                                        child: Text(
-                                                                            "Yes"),
-                                                                        style:
-                                                                            ButtonStyle(
-                                                                          backgroundColor:
-                                                                              MaterialStateProperty.all<Color>(Colors.transparent),
-                                                                        ),
-                                                                      ),
+                                                                    Text(
+                                                                      "Have you consumed this ingredient?",
                                                                     ),
                                                                     SizedBox(
-                                                                      width:
-                                                                          10.0,
+                                                                      height:
+                                                                          20.0,
                                                                     ),
-                                                                    Expanded(
-                                                                      child:
-                                                                          ElevatedButton(
-                                                                        onPressed:
-                                                                            () {
-                                                                          Get.back();
-                                                                        },
-                                                                        child: Text(
-                                                                            "No"),
-                                                                        style:
-                                                                            ButtonStyle(
-                                                                          backgroundColor:
-                                                                              MaterialStateProperty.all<Color>(ColourConstant.kButtonColor),
+                                                                    Row(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .spaceBetween,
+                                                                      children: [
+                                                                        Expanded(
+                                                                          child:
+                                                                              ElevatedButton(
+                                                                            onPressed:
+                                                                                () async {
+                                                                              bool successConsume = false;
+
+                                                                              bool success = false;
+
+                                                                              successConsume = await ref.read(ingredientListingRepositoryProvider).consumedIngredient(snapshot.data[index].ingredientName, snapshot.data[index].expiryDate);
+
+                                                                              success = await ref.read(ingredientListingRepositoryProvider).deleteIngredients(snapshot.data[index].id);
+
+                                                                              if (success & successConsume) {
+                                                                                Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, ModalRoute.withName('/'));
+                                                                              } else
+                                                                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: const Text('Fail to consume!')));
+                                                                            },
+                                                                            child:
+                                                                                Text("Yes"),
+                                                                            style:
+                                                                                ButtonStyle(
+                                                                              backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+                                                                            ),
+                                                                          ),
                                                                         ),
-                                                                      ),
+                                                                        SizedBox(
+                                                                          width:
+                                                                              10.0,
+                                                                        ),
+                                                                        Expanded(
+                                                                          child:
+                                                                              ElevatedButton(
+                                                                            onPressed:
+                                                                                () {
+                                                                              Get.back();
+                                                                            },
+                                                                            child:
+                                                                                Text("No"),
+                                                                            style:
+                                                                                ButtonStyle(
+                                                                              backgroundColor: MaterialStateProperty.all<Color>(ColourConstant.kButtonColor),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ],
                                                                     ),
                                                                   ],
                                                                 ),
-                                                              ],
-                                                            ),
-                                                          ),
+                                                              ),
+                                                            );
+                                                          },
                                                         );
                                                       },
                                                     );
                                                   },
-                                                );
-                                              },
-                                              color: Colors.brown,
-                                            ),
+                                                  color: Colors.brown,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                      Divider(),
-                                      TextButton(
-                                        onPressed: () async {
-                                          showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return StatefulBuilder(
-                                                builder: (context, setState) {
-                                                  return AlertDialog(
-                                                    scrollable: true,
-                                                    title: Center(
-                                                      child: Text(
-                                                          'Delete Ingredient'),
-                                                    ),
-                                                    content: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8.0),
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Text(
-                                                            "Are you sure you want to \n delete this ingredient?",
+                                          Divider(),
+                                          TextButton(
+                                            onPressed: () async {
+                                              showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return StatefulBuilder(
+                                                    builder:
+                                                        (context, setState) {
+                                                      return AlertDialog(
+                                                        scrollable: true,
+                                                        title: Center(
+                                                          child: Text(
+                                                            'Delete Ingredient',
+                                                            style: TextStyle(
+                                                              color:
+                                                                  ColourConstant
+                                                                      .kTextColor,
+                                                            ),
                                                           ),
-                                                          SizedBox(
-                                                            height: 20.0,
-                                                          ),
-                                                          Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
+                                                        ),
+                                                        content: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .center,
                                                             children: [
-                                                              Expanded(
-                                                                child:
-                                                                    ElevatedButton(
-                                                                  onPressed:
-                                                                      () async {
-                                                                    bool
-                                                                        success =
-                                                                        false;
-
-                                                                    success = await ref
-                                                                        .read(
-                                                                            ingredientListingRepositoryProvider)
-                                                                        .deleteIngredients(snapshot
-                                                                            .data[index]
-                                                                            .id);
-
-                                                                    if (success) {
-                                                                      Navigator.pushNamedAndRemoveUntil(
-                                                                          context,
-                                                                          HomeScreen
-                                                                              .routeName,
-                                                                          ModalRoute.withName(
-                                                                              '/'));
-                                                                    } else
-                                                                      ScaffoldMessenger.of(
-                                                                              context)
-                                                                          .showSnackBar(
-                                                                              SnackBar(content: const Text('Fail to consume!')));
-                                                                  },
-                                                                  child: Text(
-                                                                      "Yes"),
-                                                                  style:
-                                                                      ButtonStyle(
-                                                                    backgroundColor: MaterialStateProperty.all<
-                                                                            Color>(
-                                                                        Colors
-                                                                            .transparent),
-                                                                  ),
-                                                                ),
+                                                              Text(
+                                                                "Are you sure you want to \n delete this ingredient?",
                                                               ),
                                                               SizedBox(
-                                                                width: 10.0,
+                                                                height: 20.0,
                                                               ),
-                                                              Expanded(
-                                                                child:
-                                                                    ElevatedButton(
-                                                                  onPressed:
-                                                                      () {
-                                                                    Get.back();
-                                                                  },
-                                                                  child: Text(
-                                                                      "No"),
-                                                                  style:
-                                                                      ButtonStyle(
-                                                                    backgroundColor: MaterialStateProperty.all<
-                                                                            Color>(
-                                                                        ColourConstant
-                                                                            .kButtonColor),
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  Expanded(
+                                                                    child:
+                                                                        ElevatedButton(
+                                                                      onPressed:
+                                                                          () async {
+                                                                        bool
+                                                                            success =
+                                                                            false;
+
+                                                                        success = await ref
+                                                                            .read(ingredientListingRepositoryProvider)
+                                                                            .deleteIngredients(snapshot.data[index].id);
+
+                                                                        if (success) {
+                                                                          Navigator.pushNamedAndRemoveUntil(
+                                                                              context,
+                                                                              HomeScreen.routeName,
+                                                                              ModalRoute.withName('/'));
+                                                                        } else
+                                                                          ScaffoldMessenger.of(context)
+                                                                              .showSnackBar(SnackBar(content: const Text('Fail to consume!')));
+                                                                      },
+                                                                      child: Text(
+                                                                          "Yes"),
+                                                                      style:
+                                                                          ButtonStyle(
+                                                                        backgroundColor:
+                                                                            MaterialStateProperty.all<Color>(Colors.transparent),
+                                                                      ),
+                                                                    ),
                                                                   ),
-                                                                ),
+                                                                  SizedBox(
+                                                                    width: 10.0,
+                                                                  ),
+                                                                  Expanded(
+                                                                    child:
+                                                                        ElevatedButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        Get.back();
+                                                                      },
+                                                                      child: Text(
+                                                                          "No"),
+                                                                      style:
+                                                                          ButtonStyle(
+                                                                        backgroundColor:
+                                                                            MaterialStateProperty.all<Color>(ColourConstant.kButtonColor),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
                                                               ),
                                                             ],
                                                           ),
-                                                        ],
-                                                      ),
-                                                    ),
+                                                        ),
+                                                      );
+                                                    },
                                                   );
                                                 },
                                               );
                                             },
-                                          );
-                                        },
-                                        child: Text(
-                                          "Delete",
-                                          style: TextStyle(
-                                            fontSize: 10,
-                                            color: Colors.black,
+                                            child: Text(
+                                              "Delete",
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color:
+                                                    ColourConstant.kTextColor,
+                                              ),
+                                            ),
                                           ),
-                                        ),
+                                        ],
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    );
-                  }
-                },
-              ),
-            ),
-          );
-        }),
+                                );
+                              },
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ),
+              );
+            }),
+          ),
+        ),
       ),
     );
   }
 }
-
-// @override
-// Future<List<Ingredient>> retrieveIngredients() async {
-
-//   final String apiRoute = 'ingredient/$id';
-//   var url = Uri.parse(env!.baseUrl + apiRoute);
-
-//   print('Requesting to $url');
-
-//   var response = await http.get(
-//     url,
-//     headers: {
-//       "Accept": "application/json",
-//       "Content-Type": "application/json",
-//     },
-//   );
-
-//   print('Response status: ${response.statusCode}');
-//   print('Response body: ${response.body}');
-
-//   var responseBody = response.body;
-
-//   if (response.statusCode == 200) {
-//     final results = List<Map<String, dynamic>>.from(json.decode(responseBody));
-
-//     List<Ingredient> items =
-//         results.map((item) => Ingredient.fromMap(item)).toList(growable: false);
-
-//     return items;
-//   } else {
-//     throw CustomException(message: 'Failed to retrieve ingredients!');
-//   }
-// }
-
-// @override
-// Future<bool> deleteIngredients(int ingId) async {
-//   final String apiRoute = 'ingredientDelete/$ingId';
-
-//   var url = Uri.parse(env!.baseUrl + apiRoute);
-
-//   print('Requesting to $url');
-
-//   var response = await http.delete(
-//     url,
-//     headers: {
-//       "Accept": "application/json",
-//       "Content-Type": "application/json",
-//     },
-//   );
-
-//   print('Response status: ${response.statusCode}');
-//   print('Response body: ${response.body}');
-
-//   var responseBody = response.body;
-
-//   if (response.statusCode == 200) {
-//     return true;
-//   } else if (response.statusCode == 422) {
-//     throw CustomException.fromJson(
-//         jsonDecode(responseBody) as Map<String, dynamic>);
-//   } else {
-//     throw CustomException(message: 'Failed to delete ingredient!');
-//   }
-// }
 
 String reformatDate(
     {required String date,

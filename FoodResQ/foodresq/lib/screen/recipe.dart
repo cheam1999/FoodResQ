@@ -28,17 +28,29 @@ class RecipeScreen extends HookConsumerWidget {
         ),
         elevation: 0,
       ),
-      body: SafeArea(
-        child: LayoutBuilder(builder: (context, constraint) {
-          return Column(
-            children: [
-              Text(
-                "Recipe Page",
-                style: TextStyle(fontSize: 50),
-              ),
-            ],
-          );
-        }),
+      body: SizedBox.expand(
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/graphics/background.png"),
+              colorFilter: new ColorFilter.mode(
+                  Colors.white.withOpacity(0.5), BlendMode.dstATop),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: SafeArea(
+            child: LayoutBuilder(builder: (context, constraint) {
+              return Column(
+                children: [
+                  Text(
+                    "Recipe Page",
+                    style: TextStyle(fontSize: 50),
+                  ),
+                ],
+              );
+            }),
+          ),
+        ),
       ),
     );
   }

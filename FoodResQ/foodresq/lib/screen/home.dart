@@ -23,7 +23,6 @@ class _HomeScreenState extends State<HomeScreen> {
   PageController _pageController = PageController();
   int _selectedIndex = 0;
 
-
   List<Widget> _screens = [
     IngredientListingPage(),
     RecipeScreen(),
@@ -48,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      //backgroundColor: Colors.white,
       body: PageView(
         controller: _pageController,
         children: _screens,
@@ -56,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
         //physics: NeverScrollableScrollPhysics(),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: ColourConstant.kTextColor2,
+        selectedItemColor: ColourConstant.kButtonColor,
         unselectedItemColor: ColourConstant.kGreyColor,
         // backgroundColor: Colors.white,
         // elevation: 30,
@@ -95,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Icon(
           Icons.add,
           size: 20,
-          color: Colors.white,
+          color: ColourConstant.kTextColor,
         ),
       ),
     );

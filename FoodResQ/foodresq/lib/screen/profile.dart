@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foodresq/component/normal_text.dart';
 import 'package:foodresq/constants/colour_constant.dart';
+import 'package:foodresq/constants/dialog.dart';
 import 'package:foodresq/controller/auth_controller.dart';
 import 'package:foodresq/controller/auth_repository.dart';
 import 'package:foodresq/controller/sign_in_controller.dart';
 import 'package:foodresq/models/user_model.dart';
+import 'package:foodresq/screen/auth/sign_in.dart';
 import 'package:foodresq/utilities/size_config.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -34,6 +36,25 @@ class ProfileScreen extends HookConsumerWidget {
           ),
         ),
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.exit_to_app),
+            color: ColourConstant.kGreyColor,
+            onPressed: () {
+              showLogoutDialog(
+                context: context,
+                confirmEvent: () {
+                  ref.read(authControllerProvider.notifier).signOut();
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    SignInScreen.routeName,
+                    ModalRoute.withName('/'),
+                  );
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: SizedBox.expand(
         child: Container(
@@ -41,7 +62,7 @@ class ProfileScreen extends HookConsumerWidget {
             image: DecorationImage(
               image: AssetImage("assets/graphics/background.png"),
               colorFilter: new ColorFilter.mode(
-                  Colors.white.withOpacity(0.5), BlendMode.dstATop),
+                  Colors.white.withOpacity(0.2), BlendMode.dstATop),
               fit: BoxFit.cover,
             ),
           ),

@@ -7,6 +7,9 @@ import 'package:foodresq/screen/ingredient_listing.dart';
 import 'package:foodresq/screen/profile.dart';
 import 'package:foodresq/screen/recipe.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:foodresq/local_notification_service.dart';
 
 class HomeScreen extends StatefulWidget {
   static String routeName = "/home";
@@ -33,6 +36,30 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    LocalNotificationService.initialize(context); 
+    FirebaseMessaging.instance.getInitialMessage().then((message){
+      if(message != null){
+        final routeFromMessage = message.data["route"];
+        Navigator.of(context).pushNamed(routeFromMessage);
+      }
+    });
+
+    //Foreground
+    FirebaseMessaging.onMessage.listen((message) {
+      if(message.notification != null){
+        print(message.notification!.title);
+        print(message.notification!.body);
+      }
+
+      LocalNotificationService.display(message);
+    });
+
+    //App is in background but opened and user taps on the notification
+    FirebaseMessaging.onMessageOpenedApp.listen((message){
+      // final routeFromMessage = message.data["route"];
+      // Navigator.of(context).pushNamed(routeFromMessage);
+      _pageController.jumpToPage(1);
+    });
   }
 
   void _onPageChanged(int index) {

@@ -97,7 +97,7 @@ class IngredientListingPage extends HookConsumerWidget {
                       child: Container(
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            opacity: 0.5,
+                            colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.2), BlendMode.dstATop),
                             image:
                                 AssetImage('assets/graphics/FoodResQ-logo.png'),
                             fit: BoxFit.contain,

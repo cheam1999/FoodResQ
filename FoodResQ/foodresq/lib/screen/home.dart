@@ -36,6 +36,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     LocalNotificationService.initialize(context); 
+
+    //Provide message when user taps the noti and it opened the app from terminated state
     FirebaseMessaging.instance.getInitialMessage().then((message){
       if(message != null){
         final routeFromMessage = message.data["route"];

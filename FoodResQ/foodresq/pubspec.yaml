@@ -54,6 +54,7 @@ dependencies:
   url_launcher: ^6.0.17
   ionicons: ^0.1.2
   url_launcher_web: ^2.0.6
+  overlay_support: ^1.2.1
 
 
 dev_dependencies:

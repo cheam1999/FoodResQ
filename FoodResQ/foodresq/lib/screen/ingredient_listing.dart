@@ -120,11 +120,19 @@ class IngredientListingPage extends HookConsumerWidget {
                             child: Container(
                                 decoration: BoxDecoration(
                                     color: Colors.deepOrange.shade50,
-                                    border: Border.all(
-                                      color: Colors.grey,
-                                    ),
+                                    // border: Border.all(
+                                    //   color: Colors.grey,
+                                    // ),
                                     borderRadius:
-                                        BorderRadius.all(Radius.circular(20))),
+                                        BorderRadius.all(Radius.circular(20)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey,
+                                        offset: Offset(0.0, 3.0),
+                                        blurRadius: 6.0,
+                                      ),
+                                    ],
+                                ),
                                 child: Padding(
                                   padding:
                                       EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),

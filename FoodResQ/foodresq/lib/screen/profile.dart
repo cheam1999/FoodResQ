@@ -85,168 +85,169 @@ class ProfileScreen extends HookConsumerWidget {
                         SizedBox(
                           height: 40,
                         ),
-                        Container(
-                          margin: EdgeInsets.only(
-                            left: 15,
-                            right: 15,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.9),
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                            //backgroundBlendMode: BlendMode.overlay,
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              SizedBox(
-                                height: getProportionateScreenHeight(40),
-                              ),
-                              Container(
-                                  //padding:,
-                                  width: double.infinity,
-                                  // height: getProportionateScreenHeight(200),
-                                  // decoration: BoxDecoration(color: Colors.white),
-                                  constraints: BoxConstraints(
-                                    minHeight:
-                                        getProportionateScreenHeight(125),
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            SizedBox(
+                              height: getProportionateScreenHeight(40),
+                            ),
+                            Container(
+                                //padding:,
+                                width: double.infinity,
+                                // height: getProportionateScreenHeight(200),
+                                // decoration: BoxDecoration(color: Colors.white),
+                                constraints: BoxConstraints(
+                                  minHeight:
+                                      getProportionateScreenHeight(125),
+                                ),
+                                child: CircleAvatar(
+                                  radius: 30.0,
+                                  child: ClipOval(
+                                    child: Image.asset(
+                                        'assets/graphics/english-breakfast.png'),
                                   ),
-                                  child: CircleAvatar(
-                                    radius: 30.0,
-                                    child: ClipOval(
-                                      child: Image.asset(
-                                          'assets/graphics/profile.jpg'),
-                                    ),
-                                  )),
-                              SizedBox(
-                                  height: getProportionateScreenHeight(20)),
-                              NormalText(
-                                text: '${authControllerState.name}',
-                                fontSize: 25,
-                                isBold: true,
-                              ),
-                              SizedBox(height: getProportionateScreenHeight(5)),
-                              NormalText(
-                                text: '${authControllerState.email}',
-                                fontSize: 15,
-                              ),
-                              SizedBox(
-                                  height: getProportionateScreenHeight(15)),
-                              Container(
-                                decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20)),
-                                    gradient: LinearGradient(
-                                      begin: Alignment.centerLeft,
-                                      end: Alignment.topRight,
-                                      colors: [
-                                        Color(0xFFfc4a1a),
-                                        Color(0xFFf7b733)
-                                      ],
-                                    )
-                                    // image: DecorationImage(
-                                    //   image:
-                                    //       AssetImage("assets/graphics/saved.png"),
-                                    //   colorFilter: new ColorFilter.mode(
-                                    //       Colors.white.withOpacity(0.3),
-                                    //       BlendMode.dstATop),
-                                    //   fit: BoxFit.cover,
-                                    // ),
-                                    ),
-                                width: getProportionateScreenWidth(300),
-                                height: getProportionateScreenHeight(150),
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        SizedBox(
-                                          height: 15,
-                                        ),
-                                        Text(
-                                          'Ingredients Saved ',
-                                          style: TextStyle(
-                                              color: ColourConstant.kTextColor,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text('${authControllerState.saved}',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
-                                              fontSize: 40,
-                                            )),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                  height: getProportionateScreenHeight(15)),
-                              Container(
-                                decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20)),
-                                    gradient: LinearGradient(
-                                      begin: Alignment.centerLeft,
-                                      end: Alignment.topRight,
-                                      colors: [
-                                        Color(0xFF5B86E5),
-                                        Color(0xFF36D1DC)
-                                      ],
-                                    )),
-                                width: getProportionateScreenWidth(300),
-                                height: getProportionateScreenHeight(150),
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        SizedBox(
-                                          height: 15,
-                                        ),
-                                        Text(
-                                          'Ingredients Wasted ',
-                                          style: TextStyle(
+                                )),
+                            SizedBox(
+                                height: getProportionateScreenHeight(20)),
+                            NormalText(
+                              text: '${authControllerState.name}',
+                              fontSize: 25,
+                              isBold: true,
+                            ),
+                            SizedBox(height: getProportionateScreenHeight(5)),
+                            NormalText(
+                              text: '${authControllerState.email}',
+                              fontSize: 15,
+                            ),
+                            SizedBox(
+                                height: getProportionateScreenHeight(15)),
+                            Container(
+                              padding: EdgeInsets.all(10.0),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20)),
+                                  boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey,
+                                        offset: Offset(0.0, 3.0),
+                                        blurRadius: 6.0,
+                                      ),
+                                    ],
+                                  // image: DecorationImage(
+                                  //   image:
+                                  //       AssetImage("assets/graphics/saved.png"),
+                                  //   colorFilter: new ColorFilter.mode(
+                                  //       Colors.white.withOpacity(0.3),
+                                  //       BlendMode.dstATop),
+                                  //   fit: BoxFit.cover,
+                                  // ),
+                                  ),
+                              width: getProportionateScreenWidth(330),
+                              height: getProportionateScreenHeight(150),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  CircleAvatar(
+                                    backgroundImage: AssetImage('assets/graphics/laughing.png'),
+                                    radius: 40.0,
+                                  ),
+                                  Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        height: 15,
+                                      ),
+                                      Text(
+                                        'Ingredients Saved ',
+                                        style: TextStyle(
                                             color: ColourConstant.kTextColor,
-                                            fontSize: 20,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text('${authControllerState.saved}',
+                                          style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text('${authControllerState.wasted}',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
-                                              fontSize: 40,
-                                            )),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                                            color: ColourConstant.kButtonColor,
+                                            fontSize: 40,
+                                          )),
+                                    ],
+                                  ),
+                                ],
                               ),
-                              SizedBox(
-                                height: getProportionateScreenHeight(40),
+                            ),
+                            SizedBox(
+                                height: getProportionateScreenHeight(15)),
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20)),
+                                  boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey,
+                                        offset: Offset(0.0, 3.0),
+                                        blurRadius: 6.0,
+                                      ),
+                                    ],
                               ),
-                            ],
-                          ),
+                              width: getProportionateScreenWidth(330),
+                              height: getProportionateScreenHeight(150),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  CircleAvatar(
+                                    backgroundImage: AssetImage('assets/graphics/sad.png'),
+                                    radius: 40.0,
+                                  ),
+                                  Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        height: 15,
+                                      ),
+                                      Text(
+                                        'Ingredients Wasted ',
+                                        style: TextStyle(
+                                            color: ColourConstant.kTextColor,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text('${authControllerState.wasted}',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: ColourConstant.kButtonColor,
+                                            fontSize: 40,
+                                          )),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: getProportionateScreenHeight(40),
+                            ),
+                          ],
                         ),
                       ],
                     ),

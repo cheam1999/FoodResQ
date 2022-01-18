@@ -16,6 +16,7 @@ import 'package:foodresq/screen/add_ingredient.dart';
 import 'package:foodresq/screen/auth/sign_in.dart';
 import 'package:foodresq/screen/home.dart';
 import 'package:foodresq/screen/ingredient_listing_repository.dart';
+import 'package:foodresq/utilities/size_config.dart';
 import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -30,6 +31,7 @@ class IngredientListingPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Future<List<Ingredient>> futureIngredient = ref.read(ingredientListingRepositoryProvider).retrieveIngredients();
     return Scaffold(
       backgroundColor: ColourConstant.kBackgroundColor,
       extendBodyBehindAppBar: true,
@@ -64,58 +66,58 @@ class IngredientListingPage extends HookConsumerWidget {
           ),
         ],
       ),
-      body: SafeArea(
-        child: LayoutBuilder(builder: (context, constraint) {
-          return Container(
-            width: double.infinity,
-            padding: EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 30.0),
-            constraints: BoxConstraints.expand(),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.5),
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+      body: SizedBox.expand(
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/graphics/background.png"),
+              colorFilter: new ColorFilter.mode(
+                  Colors.white.withOpacity(0.2), BlendMode.dstATop),
+              fit: BoxFit.cover,
             ),
-            child: Container(
-              width: double.infinity,
-              child: FutureBuilder(
-                future: ref
-                    .read(ingredientListingRepositoryProvider)
-                    .retrieveIngredients(),
-                builder: (context, AsyncSnapshot snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(
-                      child: SizedBox(
-                        child: CircularProgressIndicator(
-                          color: ColourConstant.kButtonColor,
-                        ),
-                        height: 50.0,
-                        width: 50.0,
+          ),
+          child: Container(
+            width: double.infinity,
+            child: FutureBuilder(
+              future: ref
+                  .read(ingredientListingRepositoryProvider)
+                  .retrieveIngredients(),
+              builder: (context, AsyncSnapshot snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: SizedBox(
+                      child: CircularProgressIndicator(
+                        color: ColourConstant.kButtonColor,
                       ),
-                    );
-                  } else if (snapshot.hasData && snapshot.data.isEmpty) {
-                    return Center(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.2), BlendMode.dstATop),
-                            image:
-                                AssetImage('assets/graphics/FoodResQ-logo.png'),
-                            fit: BoxFit.contain,
-                          ),
+                      height: 50.0,
+                      width: 50.0,
+                    ),
+                  );
+                } else if (snapshot.hasData && snapshot.data.isEmpty) {
+                  return Center(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          //opacity: 0.5,
+                          image:
+                              AssetImage('assets/graphics/FoodResQ-logo.png'),
+                          fit: BoxFit.contain,
                         ),
                       ),
-                    );
-                  } else {
-                    return Container(
-                      child: RefreshIndicator(
-                        onRefresh: () async {},
-                        child: ListView.builder(
-                          itemCount: snapshot.data.length,
-                          scrollDirection: Axis.vertical,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Container(
-                              padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
-                              child: Container(
+                    ),
+                  );
+                } else {
+                  return Container(
+                    child: RefreshIndicator(
+                      onRefresh: () async {},
+                      child: ListView.builder(
+                        itemCount: snapshot.data.length,
+                        scrollDirection: Axis.vertical,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Container(
+                            padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
+                            margin: EdgeInsets.all(10),
+                            child: Container(
                                 decoration: BoxDecoration(
                                     color: Colors.deepOrange.shade50,
                                     border: Border.all(
@@ -126,6 +128,7 @@ class IngredientListingPage extends HookConsumerWidget {
                                 child: Padding(
                                   padding:
                                       EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
@@ -141,6 +144,8 @@ class IngredientListingPage extends HookConsumerWidget {
                                             child: Container(
                                               height: 100,
                                               width: 100,
+                                              margin: EdgeInsets.only(
+                                                  top: 10, bottom: 10),
                                               decoration: BoxDecoration(
                                                 border: Border.all(
                                                   color: calculateDaysLeft(
@@ -194,6 +199,8 @@ class IngredientListingPage extends HookConsumerWidget {
                                                       TextOverflow.ellipsis,
                                                   style: TextStyle(
                                                     fontSize: 16.0,
+                                                    color: ColourConstant
+                                                        .kTextColor,
                                                   ),
                                                 ),
                                                 SizedBox(
@@ -236,6 +243,8 @@ class IngredientListingPage extends HookConsumerWidget {
                                                   "Expires on: ${reformatDate(date: snapshot.data[index].expiryDate)}",
                                                   style: TextStyle(
                                                     fontSize: 10.0,
+                                                    color: ColourConstant
+                                                        .kTextColor,
                                                   ),
                                                 ),
                                               ],
@@ -367,7 +376,12 @@ class IngredientListingPage extends HookConsumerWidget {
                                                     scrollable: true,
                                                     title: Center(
                                                       child: Text(
-                                                          'Delete Ingredient'),
+                                                        'Delete Ingredient',
+                                                        style: TextStyle(
+                                                          color: ColourConstant
+                                                              .kTextColor,
+                                                        ),
+                                                      ),
                                                     ),
                                                     content: Padding(
                                                       padding:
@@ -464,94 +478,30 @@ class IngredientListingPage extends HookConsumerWidget {
                                         child: Text(
                                           "Delete",
                                           style: TextStyle(
-                                            fontSize: 10,
-                                            color: Colors.black,
+                                            fontSize: 12,
+                                            color: ColourConstant.kTextColor,
                                           ),
                                         ),
                                       ),
                                     ],
                                   ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
+                                  //   ),
+                                  // );
+                                )),
+                          );
+                        },
                       ),
-                    );
-                  }
-                },
-              ),
+                    ),
+                  );
+                }
+              },
             ),
-          );
-        }),
+          ),
+        ),
       ),
     );
   }
 }
-
-// @override
-// Future<List<Ingredient>> retrieveIngredients() async {
-
-//   final String apiRoute = 'ingredient/$id';
-//   var url = Uri.parse(env!.baseUrl + apiRoute);
-
-//   print('Requesting to $url');
-
-//   var response = await http.get(
-//     url,
-//     headers: {
-//       "Accept": "application/json",
-//       "Content-Type": "application/json",
-//     },
-//   );
-
-//   print('Response status: ${response.statusCode}');
-//   print('Response body: ${response.body}');
-
-//   var responseBody = response.body;
-
-//   if (response.statusCode == 200) {
-//     final results = List<Map<String, dynamic>>.from(json.decode(responseBody));
-
-//     List<Ingredient> items =
-//         results.map((item) => Ingredient.fromMap(item)).toList(growable: false);
-
-//     return items;
-//   } else {
-//     throw CustomException(message: 'Failed to retrieve ingredients!');
-//   }
-// }
-
-// @override
-// Future<bool> deleteIngredients(int ingId) async {
-//   final String apiRoute = 'ingredientDelete/$ingId';
-
-//   var url = Uri.parse(env!.baseUrl + apiRoute);
-
-//   print('Requesting to $url');
-
-//   var response = await http.delete(
-//     url,
-//     headers: {
-//       "Accept": "application/json",
-//       "Content-Type": "application/json",
-//     },
-//   );
-
-//   print('Response status: ${response.statusCode}');
-//   print('Response body: ${response.body}');
-
-//   var responseBody = response.body;
-
-//   if (response.statusCode == 200) {
-//     return true;
-//   } else if (response.statusCode == 422) {
-//     throw CustomException.fromJson(
-//         jsonDecode(responseBody) as Map<String, dynamic>);
-//   } else {
-//     throw CustomException(message: 'Failed to delete ingredient!');
-//   }
-// }
 
 String reformatDate(
     {required String date,
@@ -582,4 +532,48 @@ int calculateDaysLeft({required String date}) {
   int daysLeft = expDate.difference(dateNow).inDays;
 
   return daysLeft;
+}
+
+// consumed ingredient api
+@override
+Future<bool> consumedIngredient(
+    int userId, String ingredientName, String expiryDate) async {
+  final String apiRoute = 'consumed_ingredient';
+
+  // DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+  // String expiryDateString = dateFormat.format(expiryDate);
+
+  // print(expiryDateString);
+
+  var url = Uri.parse(env!.baseUrl + apiRoute);
+  //var url = Uri.parse('http://127.0.0.1:8000/api/' + apiRoute);
+
+  print('Requesting to $url');
+
+  var response = await http.post(
+    url,
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+    },
+    body: jsonEncode({
+      'user_id': userId,
+      'ingredient_name': ingredientName,
+      'expiry_date': expiryDate
+    }),
+  );
+
+  print('Response status: ${response.statusCode}');
+  print('Response body: ${response.body}');
+
+  var responseBody = response.body;
+
+  if (response.statusCode == 200) {
+    return true;
+  } else if (response.statusCode == 422) {
+    throw CustomException.fromJson(
+        jsonDecode(responseBody) as Map<String, dynamic>);
+  } else {
+    throw CustomException(message: 'Failed!');
+  }
 }

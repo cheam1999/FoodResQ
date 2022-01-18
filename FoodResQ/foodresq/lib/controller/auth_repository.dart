@@ -6,19 +6,18 @@ import 'package:foodresq/utilities/user_shared_preferences.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:http/http.dart' as http;
 
-
 import '../env.dart';
 import '../models/custom_exception.dart';
 
 abstract class BaseAuthRepository {
   Future<User> getCurrentUser();
   Future<User> signIn({required String loginInfo, required String password});
-  Future<User> signUp(
-      {required String name,
-      required String email,
-      required String password,
-      //required String password_confirmation,
-      });
+  Future<User> signUp({
+    required String name,
+    required String email,
+    required String password,
+    //required String password_confirmation,
+  });
 
   // Future<User> updateUserDetails({
   //   required String name,
@@ -124,11 +123,11 @@ class AuthRepository implements BaseAuthRepository {
   }
 
   @override
-  Future<User> signUp(
-      {required String name,
-      required String email,
-      required String password, //required String password_confirmation,
-      }) async {
+  Future<User> signUp({
+    required String name,
+    required String email,
+    required String password, //required String password_confirmation,
+  }) async {
     final String apiRoute = 'register';
 
     var url = Uri.parse(env!.baseUrl + apiRoute);
@@ -185,6 +184,37 @@ class AuthRepository implements BaseAuthRepository {
       return json.decode(responseBody)['success'];
     } else {
       throw CustomException(message: "Failed to update password");
+    }
+  }
+
+  @override
+  Future<User> retrieveFoodSaved() async {
+    final int id = _read(authControllerProvider).id!;
+    String? _accesToken = await UserSharedPreferences.getAccessToken() ?? null;
+    final String apiRoute = 'food_saved/$id';
+    var url = Uri.parse(env!.baseUrl + apiRoute);
+
+    print('Requesting to $url');
+
+    var response = await http.get(
+      url,
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        'Authorization': 'Bearer $_accesToken',
+      },
+    );
+
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    var responseBody = response.body;
+
+    if (response.statusCode == 200) {
+      return User.fromJson(responseBody);
+      //return ${response.body};
+    } else {
+      throw CustomException(message: 'Failed to retrieve food saved!');
     }
   }
 }

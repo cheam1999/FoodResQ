@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-
 import 'constants/colour_constant.dart';
 
 MaterialColor swatchify(MaterialColor color, int value) {
@@ -23,8 +22,8 @@ MaterialColor swatchify(MaterialColor color, int value) {
 ThemeData theme() {
   return ThemeData(
     primaryColor: ColourConstant.kBackgroundColor,
-    primarySwatch: swatchify(Colors.teal, 300),
-    scaffoldBackgroundColor: Colors.white,
+    primarySwatch: swatchify(Colors.brown, 600),
+    scaffoldBackgroundColor: Color(0xFFFFFDF5),
     // fontFamily: GoogleFonts.montserrat().fontFamily,
     fontFamily: 'Montserrat',
     appBarTheme: appBarTheme(),
@@ -60,8 +59,8 @@ TextTheme textTheme() {
 AppBarTheme appBarTheme() {
   return AppBarTheme(
     centerTitle: true,
-    iconTheme: IconThemeData(color: ColourConstant.kGreyColor),
-    backgroundColor: Colors.transparent.withOpacity(0),
+    iconTheme: IconThemeData(color: ColourConstant.kTextColor),
+    backgroundColor: Colors.transparent,
     elevation: 0,
     titleTextStyle: TextStyle(
       fontFamily: 'Montserrat',

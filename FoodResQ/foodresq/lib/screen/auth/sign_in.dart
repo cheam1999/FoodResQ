@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foodresq/component/default_button.dart';
 import 'package:foodresq/component/no_account_text.dart';
 import 'package:foodresq/component/normal_text.dart';
+import 'package:foodresq/constants/colour_constant.dart';
 import 'package:foodresq/constants/dialog.dart';
 import 'package:foodresq/controller/auth_controller.dart';
 import 'package:foodresq/controller/exception_controller.dart';
@@ -22,25 +23,9 @@ class SignInScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final authControllerState = ref.watch(authControllerProvider);
 
-    // // error message
-    // ref.listen(exceptionControllerProvider,
-    //     (StateController<CustomException?> exception) {
-    //   if (exception.state == null) {
-    //     return;
-    //   }
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(
-    //       content: Text(
-    //         exception.state!.message!,
-    //       ),
-    //     ),
-    //   );
-    // });
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
         titleTextStyle: TextStyle(
           color: Colors.white,
           fontSize: 20,
@@ -49,32 +34,33 @@ class SignInScreen extends HookConsumerWidget {
         centerTitle: true,
       ),
       body: SafeArea(
-        child: SizedBox(
-          width: double.infinity,
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: getProportionateScreenWidth(20)),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(height: SizeConfig.screenHeight! * 0.04),
-                  Text(
-                    "Welcome!",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: getProportionateScreenWidth(28),
-                      fontWeight: FontWeight.bold,
-                    ),
+        child: SizedBox.expand(
+          child: Container(
+            child: SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: getProportionateScreenWidth(20)),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(height: SizeConfig.screenHeight! * 0.04),
+                      Text(
+                        "Welcome!",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: getProportionateScreenWidth(28),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: SizeConfig.screenHeight! * 0.08),
+                      SignInForm(),
+                      SizedBox(height: getProportionateScreenHeight(20)),
+                      SizedBox(height: getProportionateScreenHeight(20)),
+                      NoAccountText(),
+                    ],
                   ),
-                  SizedBox(height: SizeConfig.screenHeight! * 0.08),
-                  // Form
-                  SignInForm(),
-                  SizedBox(height: getProportionateScreenHeight(20)),
-                  
-                  SizedBox(height: getProportionateScreenHeight(20)),
-                  NoAccountText(),
-                  // VerifyStudentCardText(),
-                ],
+                ),
               ),
             ),
           ),
@@ -95,15 +81,8 @@ class SignInForm extends HookConsumerWidget {
     final signInObscureTextControllerState =
         ref.watch(signInObscureTextController);
 
-    // final _formKey = GlobalKey<FormState>();
     return Column(
-      // final _loginInfo = useState<String>();
       children: [
-        // Text('form'),
-        // DefaultButton(
-        //     text: 'Test',
-        //     press: () => ref.read(signInController).testAuthController())
-        // StreamBuilder<String>(builder: builder)
         buildLoginInfoTextFormField(signInControllerState, ref),
         SizedBox(height: getProportionateScreenHeight(30)),
         buildPasswordTextFormField(
@@ -116,22 +95,20 @@ class SignInForm extends HookConsumerWidget {
             bool isSucess = await ref.read(signInController).submitData();
             Navigator.of(context).pop();
             print(isSucess);
-            if (isSucess)
+            if (isSucess) {
               Navigator.pushNamedAndRemoveUntil(
                   context, HomeScreen.routeName, ModalRoute.withName('/'));
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Invalid login details!"),
+                ),
+              );
+            }
           },
           isPrimary: signInControllerState.isFilled,
         ),
         SizedBox(height: getProportionateScreenHeight(15)),
-        // GestureDetector(
-        //   onTap: () {
-        //     Navigator.pushNamed(context, ForgotPasswordScreen.routeName);
-        //   },
-        //   child: NormalText(
-        //     text: 'Forgot Password?',
-        //     textColor: UgekColors.kPrimaryColor,
-        //   ),
-        // )
       ],
     );
   }

@@ -190,4 +190,12 @@ class AuthController extends StateNotifier<User> {
     print('Update profile details:');
     print(state);
   }
+
+  Future getFoodSavedAndWaste() async {
+    User _user = await _read(authRepositoryProvider).getCurrentUser();
+    User newState = _user.copyWith(
+        accessToken: state.accessToken, tokenType: state.accessToken);
+    state = newState;
+     
+  }
 }

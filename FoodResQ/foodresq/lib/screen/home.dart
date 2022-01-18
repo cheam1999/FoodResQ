@@ -5,7 +5,7 @@ import 'package:foodresq/controller/auth_repository.dart';
 import 'package:foodresq/screen/add_ingredient.dart';
 import 'package:foodresq/screen/ingredient_listing.dart';
 import 'package:foodresq/screen/profile.dart';
-import 'package:foodresq/screen/recipe.dart';
+import 'package:foodresq/screen/select_ingredient.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -26,10 +26,9 @@ class _HomeScreenState extends State<HomeScreen> {
   PageController _pageController = PageController();
   int _selectedIndex = 0;
 
-
   List<Widget> _screens = [
     IngredientListingPage(),
-    RecipeScreen(),
+    SelectIngredientPage(),
     ProfileScreen()
   ];
 
@@ -56,9 +55,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     //App is in background but opened and user taps on the notification
     FirebaseMessaging.onMessageOpenedApp.listen((message){
-      // final routeFromMessage = message.data["route"];
-      // Navigator.of(context).pushNamed(routeFromMessage);
-      _pageController.jumpToPage(1);
+      final routeFromMessage = message.data["route"];
+      Navigator.of(context).pushNamed(routeFromMessage);
     });
   }
 
@@ -75,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      //backgroundColor: Colors.white,
       body: PageView(
         controller: _pageController,
         children: _screens,
@@ -83,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
         //physics: NeverScrollableScrollPhysics(),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: ColourConstant.kTextColor2,
+        selectedItemColor: ColourConstant.kButtonColor,
         unselectedItemColor: ColourConstant.kGreyColor,
         // backgroundColor: Colors.white,
         // elevation: 30,
@@ -122,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Icon(
           Icons.add,
           size: 20,
-          color: Colors.white,
+          color: ColourConstant.kTextColor,
         ),
       ),
     );

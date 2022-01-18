@@ -19,7 +19,7 @@ class _StartScreenState extends ConsumerState<StartScreen> {
   // PageController _pageController = PageController();
   // int _selectedIndex = 0;
 
-  // List<Widget> _screens = [IngredientScreen(), RecipeScreen(), ProfileScreen()];
+  // List<Widget> _screens = [IngredientScreen(), SelectIngredientPage(), ProfileScreen()];
 
   bool isLoading = true;
 
@@ -29,22 +29,22 @@ class _StartScreenState extends ConsumerState<StartScreen> {
     super.initState();
   }
 
-  // Future getUser() async {
-  //   try {
-  //     print('get user...');
-  //     await ref.read(authControllerProvider.notifier).appStarted();
-  //     setState(() => isLoading = false);
-  //   } catch (e) {
-  //     print('Failed to get user info');
-  //     showErrorDialog(
-  //         context: context,
-  //         action: () {
-  //           Navigator.pushNamedAndRemoveUntil(
-  //               context, StartScreen.routeName, ModalRoute.withName('/'));
-  //         },
-  //         error: "Failed to connect to the server.");
-  //   }
-  // }
+  Future getUser() async {
+    try {
+      print('get user...');
+      await ref.read(authControllerProvider.notifier).appStarted();
+      setState(() => isLoading = false);
+    } catch (e) {
+      print('Failed to get user info');
+      showErrorDialog(
+          context: context,
+          action: () {
+            Navigator.pushNamedAndRemoveUntil(
+                context, StartScreen.routeName, ModalRoute.withName('/'));
+          },
+          error: "Failed to connect to the server.");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

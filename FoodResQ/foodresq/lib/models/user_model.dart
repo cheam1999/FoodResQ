@@ -6,6 +6,8 @@ class User {
   final String? name;
   final String? email;
   final String? accessToken;
+  final int? saved;
+  final int? wasted;
   final String? createdAt;
   final String? updatedAt;
   final String? tokenType;
@@ -15,6 +17,8 @@ class User {
     this.name,
     this.email,
     this.accessToken,
+    this.saved,
+    this.wasted,
     this.createdAt,
     this.updatedAt,
     this.tokenType,
@@ -26,6 +30,8 @@ class User {
     String? name,
     String? email,
     String? accessToken,
+    int? saved,
+    int? wasted,
     String? createdAt,
     String? updatedAt,
     String? tokenType,
@@ -36,6 +42,8 @@ class User {
       name: name ?? this.name,
       email: email ?? this.email,
       accessToken: accessToken ?? this.accessToken,
+      saved: saved ?? this.saved,
+      wasted: wasted ?? this.wasted,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       tokenType: tokenType ?? this.tokenType,
@@ -49,6 +57,8 @@ class User {
       'name': name,
       'email': email,
       'accessToken': accessToken,
+      'saved' : saved,
+      'wasted' : wasted,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
       'tokenType': tokenType,
@@ -62,6 +72,8 @@ class User {
       name: map['name'] != null ? map['name'] : null,
       email: map['email'] != null ? map['email'] : null,
       accessToken: map['accessToken'] != null ? map['accessToken'] : null,
+      saved: map['saved'] != null ? map['saved'] : null,
+      wasted: map['wasted'] != null ? map['wasted'] : null,
       createdAt: map['createdAt'] != null ? map['createdAt'] : null,
       updatedAt: map['updatedAt'] != null ? map['updatedAt'] : null,
       tokenType: map['tokenType'] != null ? map['tokenType'] : null,
@@ -87,6 +99,8 @@ class User {
         other.name == name &&
         other.email == email &&
         other.accessToken == accessToken &&
+        other.saved == saved &&
+        other.wasted == wasted &&
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt &&
         other.tokenType == tokenType &&
@@ -99,6 +113,8 @@ class User {
         name.hashCode ^
         email.hashCode ^
         accessToken.hashCode ^
+        saved.hashCode ^
+        wasted.hashCode ^
         createdAt.hashCode ^
         updatedAt.hashCode ^
         tokenType.hashCode ^
@@ -107,8 +123,7 @@ class User {
 }
 
 int checkAndReturnInt(dynamic value) {
-    if (value is int) 
-      return value;
-    String str = value;
-    return int.parse(str);
-  }
+  if (value is int) return value;
+  String str = value;
+  return int.parse(str);
+}

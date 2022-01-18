@@ -3,7 +3,6 @@ import 'package:foodresq/constants/colour_constant.dart';
 import 'package:foodresq/screen/auth/sign_in.dart';
 import 'package:foodresq/utilities/size_config.dart';
 
-
 class SignInText extends StatelessWidget {
   const SignInText({Key? key}) : super(key: key);
 
@@ -24,8 +23,10 @@ class SignInText extends StatelessWidget {
           child: Text(
             "Click here to sign in!",
             style: TextStyle(
-                fontSize: getProportionateScreenWidth(14),
-                color: ColourConstant.kHeaderColor),
+              fontSize: getProportionateScreenWidth(14),
+              color: ColourConstant.kButtonColor,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ],

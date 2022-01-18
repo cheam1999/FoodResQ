@@ -11,22 +11,23 @@ void showLoadingDialog({required BuildContext context}) => showDialog(
       builder: (_) => Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: Padding(
-          padding: const EdgeInsets.all(35.0),
+          padding: const EdgeInsets.all(20.0),
           child: Container(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
+                SizedBox(height: 20),
+                CircularProgressIndicator(),
+                SizedBox(height: 20),
                 Text(
                   "Loading...",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 25,
+                    fontSize: 18,
                   ),
                 ),
-                SizedBox(height: 50),
-                CircularProgressIndicator(),
+                SizedBox(height: 20),
               ],
             ),
           ),
@@ -90,7 +91,6 @@ void showErrorDialog({
         ),
       ),
     );
-
 
 void showLogoutDialog({
   required BuildContext context,

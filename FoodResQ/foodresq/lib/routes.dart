@@ -4,9 +4,10 @@ import 'package:foodresq/screen/auth/sign_in.dart';
 import 'package:foodresq/screen/auth/sign_up.dart';
 import 'package:foodresq/screen/home.dart';
 import 'package:foodresq/screen/profile.dart';
-import 'package:foodresq/screen/recipe.dart';
-import 'package:foodresq/screen/ingredient_listing.dart';
 import 'package:foodresq/screen/start.dart';
+import 'package:foodresq/screen/ingredient_listing.dart';
+import 'package:foodresq/screen/recipe.dart';
+
 
 final Map<String, WidgetBuilder> routes = {
   StartScreen.routeName: (context) => StartScreen(),

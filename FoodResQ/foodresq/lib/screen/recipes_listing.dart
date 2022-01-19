@@ -65,11 +65,16 @@ class RecipeListingPage extends HookConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Card(
-                child: buildListTile(
-                    title: "No Ingredient", ingredientList: ingredientList),
+              padding: const EdgeInsets.fromLTRB(24, 8, 0, 4),
+              child: Text(
+                "Selected Ingredients: ",
+                style: TextStyle(color: Colors.black, fontSize: 16),
               ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(18, 2, 18, 0),
+              child: buildListTile(
+                  title: "No Ingredient", ingredientList: ingredientList),
             ),
             Expanded(
               child: Container(
@@ -351,14 +356,23 @@ class RecipeListingPage extends HookConsumerWidget {
 
   Widget buildListTile(
       {required String title, required String ingredientList}) {
-    return ListTile(
+    return Container(
+      width: 500,
+      height: 50,
       // onTap: onTap,
-      title: Text(
-        // "${ingredients[0].ingredientName}",
-        "${ingredientList}",
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(color: Colors.black, fontSize: 18),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 13, 0, 0),
+        child: Text(
+          // "${ingredients[0].ingredientName}",
+          "${ingredientList}",
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(color: Colors.black, fontSize: 18),
+        ),
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
     );
   }

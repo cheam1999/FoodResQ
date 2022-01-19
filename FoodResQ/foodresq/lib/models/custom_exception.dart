@@ -10,6 +10,4 @@ class CustomException {
       errors: json['errors'],
     );
   }
-
-  set state(CustomException state) {}
 }

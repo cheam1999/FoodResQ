@@ -59,14 +59,6 @@ class AuthController extends StateNotifier<User> {
     }
   }
 
-  Future updateReferralCount() async {
-    // await _read(authRepositoryProvider).getCurrentUser();
-    User _user = await _read(authRepositoryProvider).getCurrentUser();
-    User newState = _user.copyWith(
-        accessToken: state.accessToken, tokenType: state.accessToken);
-    state = newState;
-  }
-
   void signOut() async {
     print('Sign out user!');
 
@@ -77,19 +69,6 @@ class AuthController extends StateNotifier<User> {
     UserSharedPreferences.removeLoginStatus();
     UserSharedPreferences.removeLoginStatus();
 
-    // //TODO: switch case maybe?
-    // if (state.loginType == LoginType.FACEBOOK) {
-    //   await FacebookAuth.instance.logOut();
-    //   print('logout fb');
-    // } else if (state.loginType == LoginType.GOOGLE) {
-    //   await getGoogleLoginScope().signOut();
-    //   print('logout google');
-    // } else if (state.loginType == LoginType.APPLE) {
-    //   print('logout apple');
-    //   // Logout Apple ID - no logout method provided by the sign_in_with_apple package
-    // } else {
-    //   // Logout own login system if implemented
-    // }
     state = User();
   }
 
@@ -121,18 +100,18 @@ class AuthController extends StateNotifier<User> {
     return false;
   }
 
-  Future<bool> signUp(
-      {required String fullname,
-      required String email,
-      required String password,
-      String? referbyID}) async {
+  Future<bool> signUp({
+    required String name,
+    required String email,
+    required String password,
+    //required String password_confirmation,
+  }) async {
     //TODO: save token
     try {
-      User _user = await _read(authRepositoryProvider).signUp(
-          fullname: fullname,
-          email: email,
-          password: password,
-          referbyID: referbyID);
+      print("name: $name, email: $email, pw: $password");
+      User _user = await _read(authRepositoryProvider)
+          .signUp(name: name, email: email, password: password);
+      //password_confirmation: password_confirmation);
 
       state = _user;
 
@@ -154,34 +133,15 @@ class AuthController extends StateNotifier<User> {
     return false;
   }
 
-  // Future<bool> socialLogin({required SocialLoginInfo socialLogin}) async {
-  //   try {
-  //     User _user = await _read(authRepositoryProvider)
-  //         .socialLogin(socialLogin: socialLogin);
-
-  //     state = _user;
-
-  //     UserSharedPreferences.setLoginStatus(true);
-  //     UserSharedPreferences.setAccessToken(state.accessToken!);
-  //     UserSharedPreferences.setTokenType(state.tokenType!);
-
-  //     print(state.accessToken);
-
-  //     return true;
-  //   } on CustomException catch (e) {
-  //     _handleException(e);
-  //   }
-  //   return false;
-  // }
-
   void _handleException(CustomException e) {
-   // _read(exceptionControllerProvider).state =  e;
+    //_read(exceptionControllerProvider)!.state =  e;
     //TODO: Revise this validation method, try make it for sign up only
     if (e.errors != null) {
-      if (e.errors?['fullname'] != null) {
+      print("e: $e");
+      if (e.errors?['name'] != null) {
         _read(signUpController.notifier).editErrorMessage(
-          fieldType: 'fullname',
-          errorText: e.errors!['fullname'][0],
+          fieldType: 'name',
+          errorText: e.errors!['name'][0],
         );
       }
 
@@ -229,5 +189,13 @@ class AuthController extends StateNotifier<User> {
     state = newState;
     print('Update profile details:');
     print(state);
+  }
+
+  Future getFoodSavedAndWaste() async {
+    User _user = await _read(authRepositoryProvider).getCurrentUser();
+    User newState = _user.copyWith(
+        accessToken: state.accessToken, tokenType: state.accessToken);
+    state = newState;
+     
   }
 }

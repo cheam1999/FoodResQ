@@ -5,15 +5,19 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:foodresq/constants/colour_constant.dart';
 import 'package:foodresq/env.dart';
-import 'package:foodresq/main_local.dart';
+import 'package:foodresq/main_common.dart';
 import 'package:foodresq/models/custom_exception.dart';
 import 'package:foodresq/screen/home.dart';
-import 'package:foodresq/screen/ingredient_listing.dart';
+import 'package:foodresq/screen/ingredient_listing_repository.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:tflite/tflite.dart';
 import 'package:get/get.dart';
+
+final ingredientListingRepositoryProvider =
+    Provider<IngredientRepository>((ref) => IngredientRepository(ref.read));
 
 class AddIngredientPage extends StatefulWidget {
   static String routeName = "/addIngredient";
@@ -21,23 +25,26 @@ class AddIngredientPage extends StatefulWidget {
 
   final String title;
 
-  @override
   State<AddIngredientPage> createState() => _AddIngredientPageState();
 }
 
+List? _outputs;
+File? _image;
+bool _loading = false;
+
+//_AddIngredientPageState(this._read);
+
+TextEditingController ingredientController = TextEditingController();
+TextEditingController dateController = TextEditingController();
+DateTime _selectedDate = DateTime.now();
+
 class _AddIngredientPageState extends State<AddIngredientPage> {
-  List? _outputs;
-  File? _image;
-  bool _loading = false;
-
-  TextEditingController ingredientController = TextEditingController();
-  TextEditingController dateController = TextEditingController();
-  DateTime _selectedDate = DateTime.now();
-
   @override
   void initState() {
     super.initState();
     _loading = true;
+    _outputs = null;
+    _image = null;
 
     loadModel().then((value) {
       setState(() {
@@ -72,7 +79,6 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
   @override
   void dispose() {
     Tflite.close();
-    //dateController.dispose();
     super.dispose();
   }
 
@@ -139,8 +145,8 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
                       icon: Icon(Icons.camera),
                       label: Text("Camera"),
                       style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.brown),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            ColourConstant.kButtonColor),
                       ),
                     ),
                     ElevatedButton.icon(
@@ -150,8 +156,8 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
                       icon: Icon(Icons.image),
                       label: Text("Gallery"),
                       style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.brown),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            ColourConstant.kButtonColor),
                       ),
                     ),
                     SizedBox(
@@ -180,7 +186,12 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
                               builder: (context, setState) {
                                 return AlertDialog(
                                   scrollable: true,
-                                  title: Text('Add Ingredient Manually'),
+                                  title: Text(
+                                    'Add Ingredient Manually',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                    ),
+                                  ),
                                   content: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Form(
@@ -193,6 +204,9 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
                                               icon: Icon(Icons.fastfood),
                                             ),
                                           ),
+                                          SizedBox(
+                                            height: 20.0,
+                                          ),
                                           TextFormField(
                                             controller: dateController,
                                             onTap: () async {
@@ -201,12 +215,12 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
                                                   .requestFocus(
                                                       new FocusNode());
 
-                                              // Show Date Picker Here
-                                              await _selectDate(context);
-
                                               dateController.text =
                                                   "${_selectedDate.toLocal()}"
                                                       .split(' ')[0];
+
+                                              // Show Date Picker Here
+                                              await _selectDate(context);
                                             },
                                             decoration: InputDecoration(
                                               labelText: 'Expiry Date',
@@ -218,43 +232,21 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
                                       ),
                                     ),
                                   ),
-                                  actions: [
-                                    ElevatedButton(
-                                      child: Text("Save"),
-                                      onPressed: () async {
-                                        var ingredient =
-                                            ingredientController.text;
-
-                                        bool success = false;
-
-                                        //userID hard code
-                                        success = await saveIngredient(
-                                            userID, ingredient, _selectedDate);
-
-                                        if (success) {
-                                          Navigator.pushNamedAndRemoveUntil(
-                                              context,
-                                              HomeScreen.routeName,
-                                              ModalRoute.withName('/'));
-                                        } else
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                                  content: const Text(
-                                                      'Fail to save!')));
-                                      },
-                                    )
-                                  ],
+                                  actions: [addIngredient2()],
                                 );
                               },
                             );
                           },
-                        );
+                        ).then((value) {
+                          dateController.clear();
+                          ingredientController.clear();
+                        });
                       },
                       icon: Icon(Icons.edit),
                       label: Text("Add Ingredient Manually"),
                       style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.brown),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            ColourConstant.kButtonColor),
                       ),
                     ),
                     SizedBox(
@@ -267,8 +259,8 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
                       icon: Icon(Icons.close),
                       label: Text("Cancel"),
                       style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.brown),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            ColourConstant.kButtonColor),
                       ),
                     ),
                   ],
@@ -296,156 +288,137 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
         ),
         elevation: 0,
       ),
-      body: SafeArea(
-        child: LayoutBuilder(builder: (context, constraint) {
-          return SizedBox(
-            width: double.infinity,
-            child: SingleChildScrollView(
-              // dragStartBehavior: DragStartBehavior.down
-              physics: ClampingScrollPhysics(),
-              // padding: EdgeInsets.symmetric(
-              //     horizontal: getProportionateScreenWidth(20)),
-              padding: EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 30.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(height: 20),
-                  Text(
-                    'Your Ingredient',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 20),
-                  _image == null
-                      ? Container(
-                          child: Center(
-                            child: Text(
-                              "Image Placeholder",
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          width: 200,
-                          height: 200,
-                          color: Colors.black38,
-                        )
-                      : Container(
-                          width: 200,
-                          height: 200,
-                          color: Colors.white,
-                          child: FittedBox(
-                            child: Image.file(_image!),
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                  SizedBox(height: 50),
-                  _outputs != null
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Ingredient Name:",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 0,
-                                  width: 10,
-                                ),
-                                Text(
-                                  _outputs![0]["label"],
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Expiry Date:",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 0,
-                                  width: 10,
-                                ),
-                                Text(
-                                    "${_selectedDate.toLocal()}".split(' ')[0]),
-                                SizedBox(
-                                  height: 0,
-                                  width: 10,
-                                ),
-                                IconButton(
-                                  icon: Icon(Icons.calendar_today_rounded),
-                                  iconSize: 20,
-                                  onPressed: () => _selectDate(context),
-                                  color: Colors.orange.shade800,
-                                ),
-                              ],
-                            ),
-                            Text(
-                              "Note: For things without expiry date, select an estimated expiry date.",
-                              style: TextStyle(
-                                fontSize: 10,
-                              ),
-                            ),
-                            SizedBox(height: 20),
-                            Container(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  bool success = false;
-
-                                  //userID hard code
-                                  success = await saveIngredient(
-                                      userID, _outputs![0]["label"], _selectedDate);
-
-                                  if (success) {
-                                    Navigator.pushNamedAndRemoveUntil(
-                                        context,
-                                        HomeScreen.routeName,
-                                        ModalRoute.withName('/'));
-                                  } else
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                            content:
-                                                const Text('Fail to save!')));
-                                },
-                                child: Text(
-                                  "Confirm & Save",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                          Colors.orange.shade800),
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      : Container(),
-                ],
-              ),
+      body: SizedBox.expand(
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/graphics/background.png"),
+              colorFilter: new ColorFilter.mode(
+                  Colors.white.withOpacity(0.2), BlendMode.dstATop),
+              fit: BoxFit.cover,
             ),
-          );
-        }),
+          ),
+          child: SafeArea(
+            child: LayoutBuilder(builder: (context, constraint) {
+              return SizedBox(
+                width: double.infinity,
+                child: SingleChildScrollView(
+                  // dragStartBehavior: DragStartBehavior.down
+                  physics: ClampingScrollPhysics(),
+                  // padding: EdgeInsets.symmetric(
+                  //     horizontal: getProportionateScreenWidth(20)),
+                  padding: EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 30.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 20),
+                      Text(
+                        'Your Ingredient',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 20),
+                      _image == null
+                          ? Container(
+                              child: Center(
+                                child: Text(
+                                  "Image Placeholder",
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              width: 200,
+                              height: 200,
+                              color: Colors.grey[300],
+                            )
+                          : Container(
+                              width: 200,
+                              height: 200,
+                              color: Colors.white,
+                              child: FittedBox(
+                                child: Image.file(_image!),
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                      SizedBox(height: 50),
+                      _outputs != null
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Ingredient Name:",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 0,
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      _outputs![0]["label"],
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 20),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Expiry Date:",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 0,
+                                      width: 10,
+                                    ),
+                                    Text("${_selectedDate.toLocal()}"
+                                        .split(' ')[0]),
+                                    SizedBox(
+                                      height: 0,
+                                      width: 10,
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.calendar_today_rounded),
+                                      iconSize: 20,
+                                      onPressed: () => _selectDate(context),
+                                      color: Colors.orange.shade800,
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  "Note: For things without expiry date, select an estimated expiry date.",
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                  ),
+                                ),
+                                SizedBox(height: 20),
+                                Container(
+                                  width: double.infinity,
+                                  child: addIngredient(),
+                                ),
+                              ],
+                            )
+                          : Container(),
+                    ],
+                  ),
+                ),
+              );
+            }),
+          ),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: "Pick Image",
@@ -455,70 +428,84 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
           size: 20,
           color: Colors.white,
         ),
-        backgroundColor: Colors.brown,
+        backgroundColor: ColourConstant.kButtonColor,
       ),
     );
   }
 }
 
-// save ingredient api
-@override
-Future<bool> saveIngredient(
-    int userId, String ingredientName, DateTime expiryDate) async {
-  final String apiRoute = 'save_ingredient';
+class addIngredient extends HookConsumerWidget {
+  const addIngredient({Key? key}) : super(key: key);
 
-  DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
-  String expiryDateString = dateFormat.format(expiryDate);
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // TODO: implement build
+    return ElevatedButton(
+      onPressed: () async {
+        bool success = false;
 
-  print(expiryDateString);
+        success = await ref
+            .read(ingredientListingRepositoryProvider)
+            .saveIngredient(_outputs![0]["label"], _selectedDate);
 
-  var url = Uri.parse(env!.baseUrl + apiRoute);
-  //var url = Uri.parse('http://127.0.0.1:8000/api/' + apiRoute);
-
-  print('Requesting to $url');
-
-  var response = await http.post(
-    url,
-    headers: {
-      "Accept": "application/json",
-      "Content-Type": "application/json",
-    },
-    body: jsonEncode({
-      'user_id': userId,
-      'ingredient_name': ingredientName,
-      'expiry_date': expiryDateString
-    }),
-  );
-
-  print('Response status: ${response.statusCode}');
-  print('Response body: ${response.body}');
-
-  var responseBody = response.body;
-
-  if (response.statusCode == 200) {
-    return true;
-  } else if (response.statusCode == 422) {
-    throw CustomException.fromJson(
-        jsonDecode(responseBody) as Map<String, dynamic>);
-  } else {
-    throw CustomException(message: 'Failed to save ingredient!');
+        if (success) {
+          Navigator.pushNamedAndRemoveUntil(
+              context, HomeScreen.routeName, ModalRoute.withName('/'));
+        } else
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: const Text('Fail to save!')));
+      },
+      child: Text(
+        "Confirm & Save",
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+      ),
+      style: ButtonStyle(
+        backgroundColor:
+            MaterialStateProperty.all<Color>(ColourConstant.kButtonColor),
+      ),
+    );
   }
 }
 
-//   //Text Recognition
-//   readTextFromImage() async {
-//     result = '';
-//     FirebaseVisionImage myImage = FirebaseVisionImage.fromFile(pickedImage);
-//     TextRecognizer recognizeText = FirebaseVision.instance.textRecognizer();
-//     VisionText readText = await recognizeText.processImage(myImage);
+class addIngredient2 extends HookConsumerWidget {
+  const addIngredient2({Key? key}) : super(key: key);
 
-//     for (TextBlock block in readText.blocks) {
-//       for (TextLine line in block.lines) {
-//         for (TextElement word in line.elements) {
-//           setState(() {
-//             result = result + ' ' + word.text;
-//           });
-//         }
-//       }
-//     }
-//   }
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // TODO: implement build
+    return ElevatedButton(
+      style: ButtonStyle(
+        backgroundColor:
+            MaterialStateProperty.all<Color>(ColourConstant.kButtonColor),
+      ),
+      child: Text("Save"),
+      onPressed: () async {
+        var ingredient = ingredientController.text;
+
+        bool success = false;
+
+        if (dateController.text != '') {
+          success = await ref
+              .read(ingredientListingRepositoryProvider)
+              .saveIngredient(ingredient, _selectedDate);
+        } else {
+          success = false;
+        }
+
+        if (success) {
+          Navigator.pushNamedAndRemoveUntil(
+              context, HomeScreen.routeName, ModalRoute.withName('/'));
+          dateController.clear();
+          ingredientController.clear();
+        } else {
+          Get.back();
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: const Text('Fail to save!')));
+        }
+      },
+    );
+  }
+}

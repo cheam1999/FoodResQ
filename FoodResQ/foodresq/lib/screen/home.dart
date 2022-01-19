@@ -1,11 +1,15 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:foodresq/constants/colour_constant.dart';
+import 'package:foodresq/controller/auth_repository.dart';
 import 'package:foodresq/screen/add_ingredient.dart';
 import 'package:foodresq/screen/ingredient_listing.dart';
 import 'package:foodresq/screen/profile.dart';
-import 'package:foodresq/screen/recipe.dart';
+import 'package:foodresq/screen/select_ingredient.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:foodresq/local_notification_service.dart';
 
 class HomeScreen extends StatefulWidget {
   static String routeName = "/home";
@@ -15,19 +19,49 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
+final authRepositoryProvider =
+    Provider<AuthRepository>((ref) => AuthRepository(ref.read));
+
 class _HomeScreenState extends State<HomeScreen> {
   PageController _pageController = PageController();
   int _selectedIndex = 0;
 
   List<Widget> _screens = [
     IngredientListingPage(),
-    RecipeScreen(),
+    SelectIngredientPage(),
     ProfileScreen()
   ];
 
   @override
   void initState() {
     super.initState();
+    LocalNotificationService.initialize(context); 
+
+    //Provide message when user taps the noti and it opened the app from terminated state
+    FirebaseMessaging.instance.getInitialMessage().then((message){
+      if(message != null){
+        final routeFromMessage = message.data["route"];
+        Navigator.of(context).pushNamed(routeFromMessage);
+      }
+    });
+
+    //Foreground
+    FirebaseMessaging.onMessage.listen((message) {
+      if(message.notification != null){
+        print(message.notification!.title);
+        print(message.notification!.body);
+      }
+
+      LocalNotificationService.display(message);
+    });
+
+    //App is in background but opened and user taps on the notification
+    FirebaseMessaging.onMessageOpenedApp.listen((message){
+      final routeFromMessage = message.data["route"];
+      Navigator.of(context).pushNamed(routeFromMessage);
+      //Navigator.pushReplacement(context, routeFromMessage);
+      //Navigator.pushNamedAndRemoveUntil(context, routeFromMessage, ModalRoute.withName('/'));
+    });
   }
 
   void _onPageChanged(int index) {
@@ -43,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      //backgroundColor: Colors.white,
       body: PageView(
         controller: _pageController,
         children: _screens,
@@ -51,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
         //physics: NeverScrollableScrollPhysics(),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: ColourConstant.kTextColor2,
+        selectedItemColor: ColourConstant.kButtonColor,
         unselectedItemColor: ColourConstant.kGreyColor,
         // backgroundColor: Colors.white,
         // elevation: 30,
@@ -90,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Icon(
           Icons.add,
           size: 20,
-          color: Colors.white,
+          color: ColourConstant.kTextColor,
         ),
       ),
     );

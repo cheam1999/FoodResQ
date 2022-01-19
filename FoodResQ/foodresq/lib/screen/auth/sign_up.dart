@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:foodresq/component/default_button.dart';
+import 'package:foodresq/component/sign_in_text.dart';
 import 'package:foodresq/constants/dialog.dart';
 import 'package:foodresq/controller/general_controller.dart';
 import 'package:foodresq/controller/sign_up_controller.dart';
+import 'package:foodresq/screen/home.dart';
+import 'package:foodresq/utilities/size_config.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-import '../../size_config.dart';
 
 class SignUpScreen extends HookConsumerWidget {
   static String routeName = "/sign_up";
@@ -16,7 +17,6 @@ class SignUpScreen extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
         titleTextStyle: TextStyle(
           color: Colors.white,
           fontSize: 20,
@@ -67,16 +67,16 @@ class SignUpForm extends HookConsumerWidget {
         ref.watch(signUpObscureTextController);
     return Column(
       children: [
-        // Fullname
+        // name
         TextFormField(
           autofocus: true,
           decoration: InputDecoration(
-            labelText: "Fullname",
-            errorText: signUpControllerState.fullname.error,
-            hintText: "Enter your name",
+            labelText: "Username",
+            errorText: signUpControllerState.name.error,
+            hintText: "Enter your username",
           ),
           onChanged: (String value) {
-            ref.read(signUpController).changeFullname(value);
+            ref.read(signUpController).changename(value);
           },
         ),
         SizedBox(height: getProportionateScreenHeight(30)),
@@ -109,16 +109,22 @@ class SignUpForm extends HookConsumerWidget {
             ref.read(signUpController).changePassword(value);
           },
         ),
-        // SizedBox(height: getProportionateScreenHeight(30)),
-        // // Referral Code
+        //SizedBox(height: getProportionateScreenHeight(30)),
+        //Password
         // TextFormField(
+        //   obscureText: signUpObscureTextControllerState.isTrue,
         //   decoration: InputDecoration(
-        //     labelText: "Referral Code",
-        //     errorText: signUpControllerState.password.error,
-        //     hintText: "Enter referral code (optional)",
+        //     labelText: "Password Confirmation",
+        //     errorText: signUpControllerState.passwordConfirmation.error,
+        //     hintText: "Confirm password",
+        //     suffixIcon: IconButton(
+        //       icon: signUpObscureTextControllerState.switchObsIcon,
+        //       onPressed: () =>
+        //           ref.read(signUpObscureTextController).toggleObs(),
+        //     ),
         //   ),
         //   onChanged: (String value) {
-        //     ref.read(signUpController).changePassword(value);
+        //     ref.read(signUpController).changeConfirmationPassword(value);
         //   },
         // ),
         SizedBox(height: getProportionateScreenHeight(30)),
@@ -129,12 +135,15 @@ class SignUpForm extends HookConsumerWidget {
             bool isSucess = await ref.read(signUpController).submitData();
             Navigator.of(context).pop();
             print(isSucess);
-            if (isSucess) print("success");
-            // Navigator.pushNamedAndRemoveUntil(context,
-            //     VerificationScreen.routeName, ModalRoute.withName('/'));
+            if (isSucess) {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, HomeScreen.routeName, ModalRoute.withName('/'));
+            }
           },
           isPrimary: signUpControllerState.isFilled,
         ),
+        SizedBox(height: getProportionateScreenHeight(30)),
+        SignInText(),
       ],
     );
   }

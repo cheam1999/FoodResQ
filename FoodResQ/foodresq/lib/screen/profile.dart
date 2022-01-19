@@ -83,7 +83,7 @@ class ProfileScreen extends HookConsumerWidget {
                     child: Column(
                       children: [
                         SizedBox(
-                          height: 40,
+                          height: 20,
                         ),
                         Column(
                           mainAxisSize: MainAxisSize.min,
@@ -121,7 +121,7 @@ class ProfileScreen extends HookConsumerWidget {
                               fontSize: 15,
                             ),
                             SizedBox(
-                                height: getProportionateScreenHeight(15)),
+                                height: getProportionateScreenHeight(20)),
                             Container(
                               padding: EdgeInsets.all(10.0),
                               decoration: BoxDecoration(

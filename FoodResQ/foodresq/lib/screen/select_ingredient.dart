@@ -231,9 +231,20 @@ class SelectIngredientPage extends HookConsumerWidget {
           minimumSize: Size.fromHeight(40),
           primary: Colors.white,
         ),
-        child: Text(
-          label,
-          style: TextStyle(color: Colors.black, fontSize: 16),
+        child: Column(
+          children: [
+            Text(
+              label,
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+            SizedBox(
+              height: 1,
+            ),
+            Text(
+              "Hint: Press to Generate Recipes!",
+              style: TextStyle(color: Colors.grey[700], fontSize: 8),
+            )
+          ],
         ),
         onPressed: () =>
             selectedIngredients.isNotEmpty ? submit(context) : null,

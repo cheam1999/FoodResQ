@@ -29,15 +29,16 @@ class IngredientListTileWidget extends StatelessWidget {
           padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
           child: Container(
             decoration: BoxDecoration(
-                color: Colors.deepOrange.shade50,
-                border: isSelected
-                    ? Border.all(
-                        color: Colors.black,
-                      )
-                    : Border.all(
-                        color: Colors.grey,
-                      ),
-                borderRadius: BorderRadius.all(Radius.circular(20))),
+              color: Colors.deepOrange.shade50,
+              border: isSelected
+                  ? Border.all(
+                      color: Colors.black,
+                    )
+                  : Border.all(
+                      color: Colors.grey,
+                    ),
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+            ),
             child: Padding(
               padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
               child: Column(

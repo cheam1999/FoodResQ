@@ -59,6 +59,8 @@ class _HomeScreenState extends State<HomeScreen> {
     FirebaseMessaging.onMessageOpenedApp.listen((message){
       final routeFromMessage = message.data["route"];
       Navigator.of(context).pushNamed(routeFromMessage);
+      //Navigator.pushReplacement(context, routeFromMessage);
+      //Navigator.pushNamedAndRemoveUntil(context, routeFromMessage, ModalRoute.withName('/'));
     });
   }
 

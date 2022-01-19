@@ -76,6 +76,9 @@ class RecipeListingPage extends HookConsumerWidget {
               child: buildListTile(
                   title: "No Ingredient", ingredientList: ingredientList),
             ),
+            SizedBox(
+              height: 10,
+            ),
             Expanded(
               child: Container(
                 width: double.infinity,

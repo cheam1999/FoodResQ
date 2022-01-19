@@ -29,7 +29,11 @@ class IngredientListTileWidget extends StatelessWidget {
           padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.deepOrange.shade50,
+              gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.topRight,
+                colors: [Colors.white, Colors.deepOrange.shade50],
+              ),
               border: isSelected
                   ? Border.all(
                       color: Colors.black,

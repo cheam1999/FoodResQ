@@ -6,8 +6,6 @@ Pineapple Jam
 Apple
 Banana
 Carrot
-Tomato
-Egg
 Condensed Milk
 Coconut Milk
 Dried Anchovies

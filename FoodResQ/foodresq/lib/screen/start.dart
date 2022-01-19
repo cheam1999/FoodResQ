@@ -25,7 +25,7 @@ class _StartScreenState extends ConsumerState<StartScreen> {
 
   @override
   void initState() {
-    //getUser();
+    getUser();
     super.initState();
   }
 

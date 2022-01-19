@@ -119,19 +119,23 @@ class IngredientListingPage extends HookConsumerWidget {
                             margin: EdgeInsets.all(10),
                             child: Container(
                                 decoration: BoxDecoration(
-                                    color: Colors.deepOrange.shade50,
-                                    // border: Border.all(
-                                    //   color: Colors.grey,
-                                    // ),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20)),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey,
-                                        offset: Offset(0.0, 3.0),
-                                        blurRadius: 6.0,
-                                      ),
+                                  gradient: LinearGradient(
+                                    begin: Alignment.centerLeft,
+                                    end: Alignment.topRight,
+                                    colors: [
+                                      Colors.white,
+                                      Colors.deepOrange.shade50
                                     ],
+                                  ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey,
+                                      offset: Offset(0.0, 3.0),
+                                      blurRadius: 6.0,
+                                    ),
+                                  ],
                                 ),
                                 child: Padding(
                                   padding:
@@ -327,12 +331,19 @@ class IngredientListingPage extends HookConsumerWidget {
                                                                           } else
                                                                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: const Text('Fail to consume!')));
                                                                         },
-                                                                        child: Text(
-                                                                            "Yes"),
+                                                                        child:
+                                                                            Text(
+                                                                          "Yes",
+                                                                          style:
+                                                                              TextStyle(
+                                                                            color:
+                                                                                Colors.black,
+                                                                          ),
+                                                                        ),
                                                                         style:
                                                                             ButtonStyle(
                                                                           backgroundColor:
-                                                                              MaterialStateProperty.all<Color>(Colors.transparent),
+                                                                              MaterialStateProperty.all<Color>(Colors.grey),
                                                                         ),
                                                                       ),
                                                                     ),
@@ -441,13 +452,19 @@ class IngredientListingPage extends HookConsumerWidget {
                                                                               SnackBar(content: const Text('Fail to consume!')));
                                                                   },
                                                                   child: Text(
-                                                                      "Yes"),
+                                                                    "Yes",
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: Colors
+                                                                          .black,
+                                                                    ),
+                                                                  ),
                                                                   style:
                                                                       ButtonStyle(
                                                                     backgroundColor: MaterialStateProperty.all<
                                                                             Color>(
                                                                         Colors
-                                                                            .transparent),
+                                                                            .grey),
                                                                   ),
                                                                 ),
                                                               ),

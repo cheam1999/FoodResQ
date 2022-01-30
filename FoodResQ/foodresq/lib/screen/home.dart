@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:foodresq/component/notification_badge.dart';
 import 'package:foodresq/constants/colour_constant.dart';
 import 'package:foodresq/controller/auth_repository.dart';
+import 'package:foodresq/models/push_notification.dart';
 import 'package:foodresq/screen/add_ingredient.dart';
 import 'package:foodresq/screen/ingredient_listing.dart';
 import 'package:foodresq/screen/profile.dart';
@@ -9,7 +11,7 @@ import 'package:foodresq/screen/select_ingredient.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:foodresq/local_notification_service.dart';
+import 'package:overlay_support/overlay_support.dart';
 
 class HomeScreen extends StatefulWidget {
   static String routeName = "/home";
@@ -23,6 +25,78 @@ final authRepositoryProvider =
     Provider<AuthRepository>((ref) => AuthRepository(ref.read));
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  //Initialize values
+  late final FirebaseMessaging _messaging;
+
+  //model 
+  PushNotification? _notificationInfo;
+
+  //register notification
+  void registerNotification() async{
+    await Firebase.initializeApp();
+    //instance for firebase messaging
+    _messaging = FirebaseMessaging.instance;
+
+    NotificationSettings settings = await _messaging.requestPermission(
+      alert: true,
+      badge: true,
+      provisional: false,
+      sound: true,
+    );
+    if(settings.authorizationStatus == AuthorizationStatus.authorized)
+    {
+      print("User granted the permission");
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+        PushNotification notification = PushNotification(
+          title: message.notification!.title,
+          body: message.notification!.body,
+          dataTitle: message.data['title'],
+          dataBody: message.data['body'],
+        );
+
+        setState(() {
+          _notificationInfo = notification;
+        });
+
+        if(_notificationInfo != null){
+          showSimpleNotification(
+            Text(_notificationInfo!.title!),
+            leading: NotificationBadge(),
+            subtitle: Text(_notificationInfo!.body!),
+            background: Colors.white,
+            foreground: ColourConstant.kTextColor,
+            duration: Duration(seconds: 10),
+            elevation: 1.0,
+          );
+        }
+      });
+    }
+    else{
+      print("Permission declined by user");
+    }
+  }
+
+  //check initial method that we receive
+  checkForInitialMessage() async{
+    await Firebase.initializeApp();
+    RemoteMessage? initialMessage = 
+      await FirebaseMessaging.instance.getInitialMessage();
+      
+    if(initialMessage != null){
+      PushNotification notification = PushNotification(
+        title: initialMessage.notification!.title,
+        body: initialMessage.notification!.body,
+        dataTitle: initialMessage.data['title'],
+        dataBody: initialMessage.data['body']
+      );
+
+      setState(() {
+        _notificationInfo = notification;
+      });
+    }
+  }
+
   PageController _pageController = PageController();
   int _selectedIndex = 0;
 
@@ -34,34 +108,27 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    //when app is in background
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message){
+      PushNotification notification = PushNotification(
+        title: message.notification!.title,
+        body: message.notification!.body,
+        dataTitle: message.data['title'],
+        dataBody: message.data['body']
+      );
+
+      setState(() {
+        _notificationInfo = notification;
+      });
+    });
+
+    //normal notification
+    registerNotification();
+
+    //when app is in terminated state
+    checkForInitialMessage();
+
     super.initState();
-    LocalNotificationService.initialize(context); 
-
-    //Provide message when user taps the noti and it opened the app from terminated state
-    FirebaseMessaging.instance.getInitialMessage().then((message){
-      if(message != null){
-        final routeFromMessage = message.data["route"];
-        Navigator.of(context).pushNamed(routeFromMessage);
-      }
-    });
-
-    //Foreground
-    FirebaseMessaging.onMessage.listen((message) {
-      if(message.notification != null){
-        print(message.notification!.title);
-        print(message.notification!.body);
-      }
-
-      LocalNotificationService.display(message);
-    });
-
-    //App is in background but opened and user taps on the notification
-    FirebaseMessaging.onMessageOpenedApp.listen((message){
-      final routeFromMessage = message.data["route"];
-      Navigator.of(context).pushNamed(routeFromMessage);
-      //Navigator.pushReplacement(context, routeFromMessage);
-      //Navigator.pushNamedAndRemoveUntil(context, routeFromMessage, ModalRoute.withName('/'));
-    });
   }
 
   void _onPageChanged(int index) {

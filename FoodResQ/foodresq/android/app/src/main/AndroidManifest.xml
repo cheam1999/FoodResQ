@@ -47,6 +47,10 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="foodresq"
             />
+            <meta-data 
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@mipmap/ic_notification" 
+            />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

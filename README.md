@@ -1,0 +1,2 @@
+# FoodResQ
+FoodResQ provides a platform for people not to overlook the food expiry date and lead to a high rate of food waste as well as having a food recipe to use up those food ingredients. It also helps to achieve the SDG goal related to the SDG 12 - Responsible Consumption and Production. We hope that by reducing food waste, we could provide a bridge in our communities for those who do not have enough to eat and conserve the resources for future generations.

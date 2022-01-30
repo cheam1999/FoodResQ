@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:foodresq/component/notification_badge.dart';
 import 'package:foodresq/constants/colour_constant.dart';
 import 'package:foodresq/controller/auth_repository.dart';
 import 'package:foodresq/models/push_notification.dart';
@@ -10,7 +11,6 @@ import 'package:foodresq/screen/select_ingredient.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:foodresq/local_notification_service.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -62,10 +62,12 @@ class _HomeScreenState extends State<HomeScreen> {
         if(_notificationInfo != null){
           showSimpleNotification(
             Text(_notificationInfo!.title!),
+            leading: NotificationBadge(),
             subtitle: Text(_notificationInfo!.body!),
             background: Colors.white,
-            foreground: Colors.black,
-            duration: Duration(seconds: 10)
+            foreground: ColourConstant.kTextColor,
+            duration: Duration(seconds: 10),
+            elevation: 1.0,
           );
         }
       });
@@ -119,6 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
         _notificationInfo = notification;
       });
     });
+
     //normal notification
     registerNotification();
 

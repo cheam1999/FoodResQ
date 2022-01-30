@@ -60,6 +60,9 @@ class RecipeListingPage extends HookConsumerWidget {
           ingredientList =
               '${ingredientList}, ${ingredients[i].ingredientName}';
         }
+        print(ingredientList);
+        List<String> ingredientList1 = ingredientList.split(", ").toList();
+        print(ingredientList1.length);
         return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,221 +115,1292 @@ class RecipeListingPage extends HookConsumerWidget {
                               itemCount: snapshot.data.length,
                               scrollDirection: Axis.vertical,
                               itemBuilder: (BuildContext context, int index) {
-                                // print(snapshot.data[index].recipeIngredients);
-                                // print(ingredientList);
-                                return snapshot.data[index].recipeIngredients
-                                        .contains(ingredientList)
-                                    ? Column(
-                                        children: [
-                                          TouchableFeedback(
-                                            onTap: () {
-                                              print("Testing");
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        RecipeDetailPage(
-                                                          title:
-                                                              '${snapshot.data[index].recipeName}',
-                                                          recipe: snapshot
-                                                              .data[index],
-                                                        )),
-                                              );
-                                            },
-                                            child: Card(
-                                              clipBehavior: Clip.antiAlias,
-                                              elevation: 5.0,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              child: Container(
-                                                padding: EdgeInsets.symmetric(
-                                                  horizontal:
-                                                      getProportionateScreenWidth(
-                                                          15),
-                                                  vertical:
-                                                      getProportionateScreenHeight(
-                                                          10),
+                                if (ingredientList1.length == 1) {
+                                  return snapshot.data[index].recipeIngredients
+                                          .contains(ingredientList1[0])
+                                      ? Column(
+                                          children: [
+                                            TouchableFeedback(
+                                              onTap: () {
+                                                print("Testing");
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          RecipeDetailPage(
+                                                            title:
+                                                                '${snapshot.data[index].recipeName}',
+                                                            recipe: snapshot
+                                                                .data[index],
+                                                          )),
+                                                );
+                                              },
+                                              child: Card(
+                                                clipBehavior: Clip.antiAlias,
+                                                elevation: 5.0,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
                                                 ),
-                                                // height: getProportionateScreenHeight(125),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Container(
-                                                      height:
-                                                          getProportionateScreenHeight(
-                                                              100),
-                                                      width:
-                                                          getProportionateScreenHeight(
-                                                              100),
-                                                      child: Opacity(
-                                                        opacity: 1,
-                                                        child: ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      8.0),
-                                                          child: Image.network(
-                                                            '${snapshot.data[index].recipeImage}',
+                                                child: Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal:
+                                                        getProportionateScreenWidth(
+                                                            15),
+                                                    vertical:
+                                                        getProportionateScreenHeight(
+                                                            10),
+                                                  ),
+                                                  // height: getProportionateScreenHeight(125),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Container(
+                                                        height:
+                                                            getProportionateScreenHeight(
+                                                                100),
+                                                        width:
+                                                            getProportionateScreenHeight(
+                                                                100),
+                                                        child: Opacity(
+                                                          opacity: 1,
+                                                          child: ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8.0),
+                                                            child:
+                                                                Image.network(
+                                                              '${snapshot.data[index].recipeImage}',
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
-                                                    ),
-                                                    Expanded(
-                                                      child: ConstrainedBox(
-                                                        constraints:
-                                                            BoxConstraints(
-                                                          minHeight:
-                                                              getProportionateScreenHeight(
-                                                                  100),
-                                                        ),
-                                                        child: Container(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .symmetric(
-                                                                  horizontal:
-                                                                      10),
-                                                          child: Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Container(
-                                                                child: Column(
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .start,
-                                                                  children: [
-                                                                    Text(
-                                                                      "Malaysian Food",
-                                                                      maxLines:
-                                                                          1,
-                                                                      overflow:
-                                                                          TextOverflow
-                                                                              .ellipsis,
-                                                                      style: TextStyle(
-                                                                          fontWeight: FontWeight
-                                                                              .bold,
-                                                                          fontSize: getProportionateScreenHeight(
-                                                                              12),
-                                                                          color:
-                                                                              ColourConstant.kHeaderColor),
-                                                                    ),
-                                                                    Text(
-                                                                      "${snapshot.data[index].recipeName}",
-                                                                      maxLines:
-                                                                          2,
-                                                                      overflow:
-                                                                          TextOverflow
-                                                                              .ellipsis,
-                                                                      style:
-                                                                          TextStyle(
-                                                                        fontSize:
-                                                                            getProportionateScreenHeight(15),
-                                                                        color: Colors
-                                                                            .black,
-                                                                        fontWeight:
-                                                                            FontWeight.bold,
+                                                      Expanded(
+                                                        child: ConstrainedBox(
+                                                          constraints:
+                                                              BoxConstraints(
+                                                            minHeight:
+                                                                getProportionateScreenHeight(
+                                                                    100),
+                                                          ),
+                                                          child: Container(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        10),
+                                                            child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Container(
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Text(
+                                                                        "Malaysian Food",
+                                                                        maxLines:
+                                                                            1,
+                                                                        overflow:
+                                                                            TextOverflow.ellipsis,
+                                                                        style: TextStyle(
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                            fontSize: getProportionateScreenHeight(12),
+                                                                            color: ColourConstant.kHeaderColor),
                                                                       ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                              Container(
-                                                                child: Column(
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .start,
-                                                                  children: [
-                                                                    Container(
-                                                                      child:
-                                                                          SingleChildScrollView(
-                                                                        physics:
-                                                                            ClampingScrollPhysics(),
-                                                                        scrollDirection:
-                                                                            Axis.horizontal,
-                                                                        child:
-                                                                            Row(
-                                                                          // mainAxisAlignment: MainAxisAlignment.start,
-                                                                          children: [
-                                                                            if (snapshot.data[index].recipeLevel ==
-                                                                                "Beginner")
-                                                                              RecipeCardTag(
-                                                                                tag: "Beginner",
-                                                                                color: Colors.green,
-                                                                              ),
-                                                                            if (snapshot.data[index].recipeLevel ==
-                                                                                "Intermediate")
-                                                                              RecipeCardTag(
-                                                                                tag: "Intermediate",
-                                                                                color: Colors.orange,
-                                                                              ),
-
-                                                                            if (snapshot.data[index].recipeLevel ==
-                                                                                "Masterchef")
-                                                                              RecipeCardTag(
-                                                                                tag: "Masterchef",
-                                                                                color: Colors.red,
-                                                                              ),
-
-                                                                            // RecipeCardTag(
-                                                                            //   tag: "Popular",
-                                                                            //   color: UgekColors.kSecondaryColor,
-                                                                            // ),
-                                                                            // RecipeCardTag(
-                                                                            //   tag: "Halal",
-                                                                            //   color: UgekColors.kSecondaryColor,
-                                                                            // ),
-                                                                          ],
+                                                                      Text(
+                                                                        "${snapshot.data[index].recipeName}",
+                                                                        maxLines:
+                                                                            2,
+                                                                        overflow:
+                                                                            TextOverflow.ellipsis,
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontSize:
+                                                                              getProportionateScreenHeight(15),
+                                                                          color:
+                                                                              Colors.black,
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
                                                                         ),
                                                                       ),
-                                                                    ),
-                                                                    // NormalText(
-                                                                    //   fontSize: 11,
-                                                                    //   text:
-                                                                    //       "${snapshot.data[index].recipeIngredients}",
-                                                                    //   textColor:
-                                                                    //       ColourConstant
-                                                                    //           .kGreyColor,
-                                                                    //   verticalPadding:
-                                                                    //       1,
-                                                                    // ),
-                                                                  ],
+                                                                    ],
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            ],
+                                                                Container(
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Container(
+                                                                        child:
+                                                                            SingleChildScrollView(
+                                                                          physics:
+                                                                              ClampingScrollPhysics(),
+                                                                          scrollDirection:
+                                                                              Axis.horizontal,
+                                                                          child:
+                                                                              Row(
+                                                                            // mainAxisAlignment: MainAxisAlignment.start,
+                                                                            children: [
+                                                                              if (snapshot.data[index].recipeLevel == "Beginner")
+                                                                                RecipeCardTag(
+                                                                                  tag: "Beginner",
+                                                                                  color: Colors.green,
+                                                                                ),
+                                                                              if (snapshot.data[index].recipeLevel == "Intermediate")
+                                                                                RecipeCardTag(
+                                                                                  tag: "Intermediate",
+                                                                                  color: Colors.orange,
+                                                                                ),
+
+                                                                              if (snapshot.data[index].recipeLevel == "Masterchef")
+                                                                                RecipeCardTag(
+                                                                                  tag: "Masterchef",
+                                                                                  color: Colors.red,
+                                                                                ),
+
+                                                                              // RecipeCardTag(
+                                                                              //   tag: "Popular",
+                                                                              //   color: UgekColors.kSecondaryColor,
+                                                                              // ),
+                                                                              // RecipeCardTag(
+                                                                              //   tag: "Halal",
+                                                                              //   color: UgekColors.kSecondaryColor,
+                                                                              // ),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      // NormalText(
+                                                                      //   fontSize: 11,
+                                                                      //   text:
+                                                                      //       "${snapshot.data[index].recipeIngredients}",
+                                                                      //   textColor:
+                                                                      //       ColourConstant
+                                                                      //           .kGreyColor,
+                                                                      //   verticalPadding:
+                                                                      //       1,
+                                                                      // ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
-                                                    ),
-                                                    // Expanded(
-                                                    //   flex: 1,
-                                                    //   child: Center(
-                                                    //     child: Container(
-                                                    //       child: IconButton(
-                                                    //         icon: post.isSaved
-                                                    //             ? UgekIcons.liked
-                                                    //             : UgekIcons.unliked,
-                                                    //         onPressed: likeFunction,
-                                                    //       ),
-                                                    //     ),
-                                                    //   ),
-                                                    // )
-                                                  ],
+                                                      // Expanded(
+                                                      //   flex: 1,
+                                                      //   child: Center(
+                                                      //     child: Container(
+                                                      //       child: IconButton(
+                                                      //         icon: post.isSaved
+                                                      //             ? UgekIcons.liked
+                                                      //             : UgekIcons.unliked,
+                                                      //         onPressed: likeFunction,
+                                                      //       ),
+                                                      //     ),
+                                                      //   ),
+                                                      // )
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        ],
-                                      )
-                                    : SizedBox.shrink();
+                                          ],
+                                        )
+                                      : SizedBox.shrink();
+                                } else if (ingredientList1.length == 2) {
+                                  return snapshot.data[index].recipeIngredients
+                                              .contains(ingredientList1[0]) |
+                                          snapshot.data[index].recipeIngredients
+                                              .contains(ingredientList1[1])
+                                      ? Column(
+                                          children: [
+                                            TouchableFeedback(
+                                              onTap: () {
+                                                print("Testing");
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          RecipeDetailPage(
+                                                            title:
+                                                                '${snapshot.data[index].recipeName}',
+                                                            recipe: snapshot
+                                                                .data[index],
+                                                          )),
+                                                );
+                                              },
+                                              child: Card(
+                                                clipBehavior: Clip.antiAlias,
+                                                elevation: 5.0,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                child: Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal:
+                                                        getProportionateScreenWidth(
+                                                            15),
+                                                    vertical:
+                                                        getProportionateScreenHeight(
+                                                            10),
+                                                  ),
+                                                  // height: getProportionateScreenHeight(125),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Container(
+                                                        height:
+                                                            getProportionateScreenHeight(
+                                                                100),
+                                                        width:
+                                                            getProportionateScreenHeight(
+                                                                100),
+                                                        child: Opacity(
+                                                          opacity: 1,
+                                                          child: ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8.0),
+                                                            child:
+                                                                Image.network(
+                                                              '${snapshot.data[index].recipeImage}',
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                        child: ConstrainedBox(
+                                                          constraints:
+                                                              BoxConstraints(
+                                                            minHeight:
+                                                                getProportionateScreenHeight(
+                                                                    100),
+                                                          ),
+                                                          child: Container(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        10),
+                                                            child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Container(
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Text(
+                                                                        "Malaysian Food",
+                                                                        maxLines:
+                                                                            1,
+                                                                        overflow:
+                                                                            TextOverflow.ellipsis,
+                                                                        style: TextStyle(
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                            fontSize: getProportionateScreenHeight(12),
+                                                                            color: ColourConstant.kHeaderColor),
+                                                                      ),
+                                                                      Text(
+                                                                        "${snapshot.data[index].recipeName}",
+                                                                        maxLines:
+                                                                            2,
+                                                                        overflow:
+                                                                            TextOverflow.ellipsis,
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontSize:
+                                                                              getProportionateScreenHeight(15),
+                                                                          color:
+                                                                              Colors.black,
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                Container(
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Container(
+                                                                        child:
+                                                                            SingleChildScrollView(
+                                                                          physics:
+                                                                              ClampingScrollPhysics(),
+                                                                          scrollDirection:
+                                                                              Axis.horizontal,
+                                                                          child:
+                                                                              Row(
+                                                                            // mainAxisAlignment: MainAxisAlignment.start,
+                                                                            children: [
+                                                                              if (snapshot.data[index].recipeLevel == "Beginner")
+                                                                                RecipeCardTag(
+                                                                                  tag: "Beginner",
+                                                                                  color: Colors.green,
+                                                                                ),
+                                                                              if (snapshot.data[index].recipeLevel == "Intermediate")
+                                                                                RecipeCardTag(
+                                                                                  tag: "Intermediate",
+                                                                                  color: Colors.orange,
+                                                                                ),
+
+                                                                              if (snapshot.data[index].recipeLevel == "Masterchef")
+                                                                                RecipeCardTag(
+                                                                                  tag: "Masterchef",
+                                                                                  color: Colors.red,
+                                                                                ),
+
+                                                                              // RecipeCardTag(
+                                                                              //   tag: "Popular",
+                                                                              //   color: UgekColors.kSecondaryColor,
+                                                                              // ),
+                                                                              // RecipeCardTag(
+                                                                              //   tag: "Halal",
+                                                                              //   color: UgekColors.kSecondaryColor,
+                                                                              // ),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      // NormalText(
+                                                                      //   fontSize: 11,
+                                                                      //   text:
+                                                                      //       "${snapshot.data[index].recipeIngredients}",
+                                                                      //   textColor:
+                                                                      //       ColourConstant
+                                                                      //           .kGreyColor,
+                                                                      //   verticalPadding:
+                                                                      //       1,
+                                                                      // ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      // Expanded(
+                                                      //   flex: 1,
+                                                      //   child: Center(
+                                                      //     child: Container(
+                                                      //       child: IconButton(
+                                                      //         icon: post.isSaved
+                                                      //             ? UgekIcons.liked
+                                                      //             : UgekIcons.unliked,
+                                                      //         onPressed: likeFunction,
+                                                      //       ),
+                                                      //     ),
+                                                      //   ),
+                                                      // )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      : SizedBox.shrink();
+                                } else {
+                                  return snapshot.data[index].recipeIngredients
+                                              .contains(ingredientList1[0]) |
+                                          snapshot.data[index].recipeIngredients
+                                              .contains(ingredientList1[1]) |
+                                          snapshot.data[index].recipeIngredients
+                                              .contains(ingredientList1[2])
+                                      ? Column(
+                                          children: [
+                                            TouchableFeedback(
+                                              onTap: () {
+                                                print("Testing");
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          RecipeDetailPage(
+                                                            title:
+                                                                '${snapshot.data[index].recipeName}',
+                                                            recipe: snapshot
+                                                                .data[index],
+                                                          )),
+                                                );
+                                              },
+                                              child: Card(
+                                                clipBehavior: Clip.antiAlias,
+                                                elevation: 5.0,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                child: Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal:
+                                                        getProportionateScreenWidth(
+                                                            15),
+                                                    vertical:
+                                                        getProportionateScreenHeight(
+                                                            10),
+                                                  ),
+                                                  // height: getProportionateScreenHeight(125),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Container(
+                                                        height:
+                                                            getProportionateScreenHeight(
+                                                                100),
+                                                        width:
+                                                            getProportionateScreenHeight(
+                                                                100),
+                                                        child: Opacity(
+                                                          opacity: 1,
+                                                          child: ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8.0),
+                                                            child:
+                                                                Image.network(
+                                                              '${snapshot.data[index].recipeImage}',
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                        child: ConstrainedBox(
+                                                          constraints:
+                                                              BoxConstraints(
+                                                            minHeight:
+                                                                getProportionateScreenHeight(
+                                                                    100),
+                                                          ),
+                                                          child: Container(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        10),
+                                                            child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Container(
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Text(
+                                                                        "Malaysian Food",
+                                                                        maxLines:
+                                                                            1,
+                                                                        overflow:
+                                                                            TextOverflow.ellipsis,
+                                                                        style: TextStyle(
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                            fontSize: getProportionateScreenHeight(12),
+                                                                            color: ColourConstant.kHeaderColor),
+                                                                      ),
+                                                                      Text(
+                                                                        "${snapshot.data[index].recipeName}",
+                                                                        maxLines:
+                                                                            2,
+                                                                        overflow:
+                                                                            TextOverflow.ellipsis,
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontSize:
+                                                                              getProportionateScreenHeight(15),
+                                                                          color:
+                                                                              Colors.black,
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                Container(
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Container(
+                                                                        child:
+                                                                            SingleChildScrollView(
+                                                                          physics:
+                                                                              ClampingScrollPhysics(),
+                                                                          scrollDirection:
+                                                                              Axis.horizontal,
+                                                                          child:
+                                                                              Row(
+                                                                            // mainAxisAlignment: MainAxisAlignment.start,
+                                                                            children: [
+                                                                              if (snapshot.data[index].recipeLevel == "Beginner")
+                                                                                RecipeCardTag(
+                                                                                  tag: "Beginner",
+                                                                                  color: Colors.green,
+                                                                                ),
+                                                                              if (snapshot.data[index].recipeLevel == "Intermediate")
+                                                                                RecipeCardTag(
+                                                                                  tag: "Intermediate",
+                                                                                  color: Colors.orange,
+                                                                                ),
+
+                                                                              if (snapshot.data[index].recipeLevel == "Masterchef")
+                                                                                RecipeCardTag(
+                                                                                  tag: "Masterchef",
+                                                                                  color: Colors.red,
+                                                                                ),
+
+                                                                              // RecipeCardTag(
+                                                                              //   tag: "Popular",
+                                                                              //   color: UgekColors.kSecondaryColor,
+                                                                              // ),
+                                                                              // RecipeCardTag(
+                                                                              //   tag: "Halal",
+                                                                              //   color: UgekColors.kSecondaryColor,
+                                                                              // ),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      // NormalText(
+                                                                      //   fontSize: 11,
+                                                                      //   text:
+                                                                      //       "${snapshot.data[index].recipeIngredients}",
+                                                                      //   textColor:
+                                                                      //       ColourConstant
+                                                                      //           .kGreyColor,
+                                                                      //   verticalPadding:
+                                                                      //       1,
+                                                                      // ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      // Expanded(
+                                                      //   flex: 1,
+                                                      //   child: Center(
+                                                      //     child: Container(
+                                                      //       child: IconButton(
+                                                      //         icon: post.isSaved
+                                                      //             ? UgekIcons.liked
+                                                      //             : UgekIcons.unliked,
+                                                      //         onPressed: likeFunction,
+                                                      //       ),
+                                                      //     ),
+                                                      //   ),
+                                                      // )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      : SizedBox.shrink();
+                                }
+                                // } else if (ingredientList1.length == 4) {
+                                //   return snapshot.data[index].recipeIngredients
+                                //               .contains(ingredientList1[0]) |
+                                //           snapshot.data[index].recipeIngredients
+                                //               .contains(ingredientList1[1]) |
+                                //           snapshot.data[index].recipeIngredients
+                                //               .contains(ingredientList1[2]) |
+                                //           snapshot.data[index].recipeIngredients
+                                //               .contains(ingredientList1[3])
+                                //       ? Column(
+                                //           children: [
+                                //             TouchableFeedback(
+                                //               onTap: () {
+                                //                 print("Testing");
+                                //                 Navigator.push(
+                                //                   context,
+                                //                   MaterialPageRoute(
+                                //                       builder: (context) =>
+                                //                           RecipeDetailPage(
+                                //                             title:
+                                //                                 '${snapshot.data[index].recipeName}',
+                                //                             recipe: snapshot
+                                //                                 .data[index],
+                                //                           )),
+                                //                 );
+                                //               },
+                                //               child: Card(
+                                //                 clipBehavior: Clip.antiAlias,
+                                //                 elevation: 5.0,
+                                //                 shape: RoundedRectangleBorder(
+                                //                   borderRadius:
+                                //                       BorderRadius.circular(10),
+                                //                 ),
+                                //                 child: Container(
+                                //                   padding: EdgeInsets.symmetric(
+                                //                     horizontal:
+                                //                         getProportionateScreenWidth(
+                                //                             15),
+                                //                     vertical:
+                                //                         getProportionateScreenHeight(
+                                //                             10),
+                                //                   ),
+                                //                   // height: getProportionateScreenHeight(125),
+                                //                   child: Row(
+                                //                     mainAxisAlignment:
+                                //                         MainAxisAlignment.start,
+                                //                     crossAxisAlignment:
+                                //                         CrossAxisAlignment
+                                //                             .start,
+                                //                     children: [
+                                //                       Container(
+                                //                         height:
+                                //                             getProportionateScreenHeight(
+                                //                                 100),
+                                //                         width:
+                                //                             getProportionateScreenHeight(
+                                //                                 100),
+                                //                         child: Opacity(
+                                //                           opacity: 1,
+                                //                           child: ClipRRect(
+                                //                             borderRadius:
+                                //                                 BorderRadius
+                                //                                     .circular(
+                                //                                         8.0),
+                                //                             child:
+                                //                                 Image.network(
+                                //                               '${snapshot.data[index].recipeImage}',
+                                //                             ),
+                                //                           ),
+                                //                         ),
+                                //                       ),
+                                //                       Expanded(
+                                //                         child: ConstrainedBox(
+                                //                           constraints:
+                                //                               BoxConstraints(
+                                //                             minHeight:
+                                //                                 getProportionateScreenHeight(
+                                //                                     100),
+                                //                           ),
+                                //                           child: Container(
+                                //                             padding:
+                                //                                 const EdgeInsets
+                                //                                         .symmetric(
+                                //                                     horizontal:
+                                //                                         10),
+                                //                             child: Column(
+                                //                               mainAxisAlignment:
+                                //                                   MainAxisAlignment
+                                //                                       .spaceBetween,
+                                //                               crossAxisAlignment:
+                                //                                   CrossAxisAlignment
+                                //                                       .start,
+                                //                               children: [
+                                //                                 Container(
+                                //                                   child: Column(
+                                //                                     crossAxisAlignment:
+                                //                                         CrossAxisAlignment
+                                //                                             .start,
+                                //                                     children: [
+                                //                                       Text(
+                                //                                         "Malaysian Food",
+                                //                                         maxLines:
+                                //                                             1,
+                                //                                         overflow:
+                                //                                             TextOverflow.ellipsis,
+                                //                                         style: TextStyle(
+                                //                                             fontWeight:
+                                //                                                 FontWeight.bold,
+                                //                                             fontSize: getProportionateScreenHeight(12),
+                                //                                             color: ColourConstant.kHeaderColor),
+                                //                                       ),
+                                //                                       Text(
+                                //                                         "${snapshot.data[index].recipeName}",
+                                //                                         maxLines:
+                                //                                             2,
+                                //                                         overflow:
+                                //                                             TextOverflow.ellipsis,
+                                //                                         style:
+                                //                                             TextStyle(
+                                //                                           fontSize:
+                                //                                               getProportionateScreenHeight(15),
+                                //                                           color:
+                                //                                               Colors.black,
+                                //                                           fontWeight:
+                                //                                               FontWeight.bold,
+                                //                                         ),
+                                //                                       ),
+                                //                                     ],
+                                //                                   ),
+                                //                                 ),
+                                //                                 Container(
+                                //                                   child: Column(
+                                //                                     crossAxisAlignment:
+                                //                                         CrossAxisAlignment
+                                //                                             .start,
+                                //                                     children: [
+                                //                                       Container(
+                                //                                         child:
+                                //                                             SingleChildScrollView(
+                                //                                           physics:
+                                //                                               ClampingScrollPhysics(),
+                                //                                           scrollDirection:
+                                //                                               Axis.horizontal,
+                                //                                           child:
+                                //                                               Row(
+                                //                                             // mainAxisAlignment: MainAxisAlignment.start,
+                                //                                             children: [
+                                //                                               if (snapshot.data[index].recipeLevel == "Beginner")
+                                //                                                 RecipeCardTag(
+                                //                                                   tag: "Beginner",
+                                //                                                   color: Colors.green,
+                                //                                                 ),
+                                //                                               if (snapshot.data[index].recipeLevel == "Intermediate")
+                                //                                                 RecipeCardTag(
+                                //                                                   tag: "Intermediate",
+                                //                                                   color: Colors.orange,
+                                //                                                 ),
+
+                                //                                               if (snapshot.data[index].recipeLevel == "Masterchef")
+                                //                                                 RecipeCardTag(
+                                //                                                   tag: "Masterchef",
+                                //                                                   color: Colors.red,
+                                //                                                 ),
+
+                                //                                               // RecipeCardTag(
+                                //                                               //   tag: "Popular",
+                                //                                               //   color: UgekColors.kSecondaryColor,
+                                //                                               // ),
+                                //                                               // RecipeCardTag(
+                                //                                               //   tag: "Halal",
+                                //                                               //   color: UgekColors.kSecondaryColor,
+                                //                                               // ),
+                                //                                             ],
+                                //                                           ),
+                                //                                         ),
+                                //                                       ),
+                                //                                       // NormalText(
+                                //                                       //   fontSize: 11,
+                                //                                       //   text:
+                                //                                       //       "${snapshot.data[index].recipeIngredients}",
+                                //                                       //   textColor:
+                                //                                       //       ColourConstant
+                                //                                       //           .kGreyColor,
+                                //                                       //   verticalPadding:
+                                //                                       //       1,
+                                //                                       // ),
+                                //                                     ],
+                                //                                   ),
+                                //                                 ),
+                                //                               ],
+                                //                             ),
+                                //                           ),
+                                //                         ),
+                                //                       ),
+                                //                       // Expanded(
+                                //                       //   flex: 1,
+                                //                       //   child: Center(
+                                //                       //     child: Container(
+                                //                       //       child: IconButton(
+                                //                       //         icon: post.isSaved
+                                //                       //             ? UgekIcons.liked
+                                //                       //             : UgekIcons.unliked,
+                                //                       //         onPressed: likeFunction,
+                                //                       //       ),
+                                //                       //     ),
+                                //                       //   ),
+                                //                       // )
+                                //                     ],
+                                //                   ),
+                                //                 ),
+                                //               ),
+                                //             ),
+                                //           ],
+                                //         )
+                                //       : SizedBox.shrink();
+                                // } else if (ingredientList1.length == 5) {
+                                //   return snapshot.data[index].recipeIngredients
+                                //               .contains(ingredientList1[0]) |
+                                //           snapshot.data[index].recipeIngredients
+                                //               .contains(ingredientList1[1]) |
+                                //           snapshot.data[index].recipeIngredients
+                                //               .contains(ingredientList1[2]) |
+                                //           snapshot.data[index].recipeIngredients
+                                //               .contains(ingredientList1[3]) |
+                                //           snapshot.data[index].recipeIngredients
+                                //               .contains(ingredientList1[4])
+                                //       ? Column(
+                                //           children: [
+                                //             TouchableFeedback(
+                                //               onTap: () {
+                                //                 print("Testing");
+                                //                 Navigator.push(
+                                //                   context,
+                                //                   MaterialPageRoute(
+                                //                       builder: (context) =>
+                                //                           RecipeDetailPage(
+                                //                             title:
+                                //                                 '${snapshot.data[index].recipeName}',
+                                //                             recipe: snapshot
+                                //                                 .data[index],
+                                //                           )),
+                                //                 );
+                                //               },
+                                //               child: Card(
+                                //                 clipBehavior: Clip.antiAlias,
+                                //                 elevation: 5.0,
+                                //                 shape: RoundedRectangleBorder(
+                                //                   borderRadius:
+                                //                       BorderRadius.circular(10),
+                                //                 ),
+                                //                 child: Container(
+                                //                   padding: EdgeInsets.symmetric(
+                                //                     horizontal:
+                                //                         getProportionateScreenWidth(
+                                //                             15),
+                                //                     vertical:
+                                //                         getProportionateScreenHeight(
+                                //                             10),
+                                //                   ),
+                                //                   // height: getProportionateScreenHeight(125),
+                                //                   child: Row(
+                                //                     mainAxisAlignment:
+                                //                         MainAxisAlignment.start,
+                                //                     crossAxisAlignment:
+                                //                         CrossAxisAlignment
+                                //                             .start,
+                                //                     children: [
+                                //                       Container(
+                                //                         height:
+                                //                             getProportionateScreenHeight(
+                                //                                 100),
+                                //                         width:
+                                //                             getProportionateScreenHeight(
+                                //                                 100),
+                                //                         child: Opacity(
+                                //                           opacity: 1,
+                                //                           child: ClipRRect(
+                                //                             borderRadius:
+                                //                                 BorderRadius
+                                //                                     .circular(
+                                //                                         8.0),
+                                //                             child:
+                                //                                 Image.network(
+                                //                               '${snapshot.data[index].recipeImage}',
+                                //                             ),
+                                //                           ),
+                                //                         ),
+                                //                       ),
+                                //                       Expanded(
+                                //                         child: ConstrainedBox(
+                                //                           constraints:
+                                //                               BoxConstraints(
+                                //                             minHeight:
+                                //                                 getProportionateScreenHeight(
+                                //                                     100),
+                                //                           ),
+                                //                           child: Container(
+                                //                             padding:
+                                //                                 const EdgeInsets
+                                //                                         .symmetric(
+                                //                                     horizontal:
+                                //                                         10),
+                                //                             child: Column(
+                                //                               mainAxisAlignment:
+                                //                                   MainAxisAlignment
+                                //                                       .spaceBetween,
+                                //                               crossAxisAlignment:
+                                //                                   CrossAxisAlignment
+                                //                                       .start,
+                                //                               children: [
+                                //                                 Container(
+                                //                                   child: Column(
+                                //                                     crossAxisAlignment:
+                                //                                         CrossAxisAlignment
+                                //                                             .start,
+                                //                                     children: [
+                                //                                       Text(
+                                //                                         "Malaysian Food",
+                                //                                         maxLines:
+                                //                                             1,
+                                //                                         overflow:
+                                //                                             TextOverflow.ellipsis,
+                                //                                         style: TextStyle(
+                                //                                             fontWeight:
+                                //                                                 FontWeight.bold,
+                                //                                             fontSize: getProportionateScreenHeight(12),
+                                //                                             color: ColourConstant.kHeaderColor),
+                                //                                       ),
+                                //                                       Text(
+                                //                                         "${snapshot.data[index].recipeName}",
+                                //                                         maxLines:
+                                //                                             2,
+                                //                                         overflow:
+                                //                                             TextOverflow.ellipsis,
+                                //                                         style:
+                                //                                             TextStyle(
+                                //                                           fontSize:
+                                //                                               getProportionateScreenHeight(15),
+                                //                                           color:
+                                //                                               Colors.black,
+                                //                                           fontWeight:
+                                //                                               FontWeight.bold,
+                                //                                         ),
+                                //                                       ),
+                                //                                     ],
+                                //                                   ),
+                                //                                 ),
+                                //                                 Container(
+                                //                                   child: Column(
+                                //                                     crossAxisAlignment:
+                                //                                         CrossAxisAlignment
+                                //                                             .start,
+                                //                                     children: [
+                                //                                       Container(
+                                //                                         child:
+                                //                                             SingleChildScrollView(
+                                //                                           physics:
+                                //                                               ClampingScrollPhysics(),
+                                //                                           scrollDirection:
+                                //                                               Axis.horizontal,
+                                //                                           child:
+                                //                                               Row(
+                                //                                             // mainAxisAlignment: MainAxisAlignment.start,
+                                //                                             children: [
+                                //                                               if (snapshot.data[index].recipeLevel == "Beginner")
+                                //                                                 RecipeCardTag(
+                                //                                                   tag: "Beginner",
+                                //                                                   color: Colors.green,
+                                //                                                 ),
+                                //                                               if (snapshot.data[index].recipeLevel == "Intermediate")
+                                //                                                 RecipeCardTag(
+                                //                                                   tag: "Intermediate",
+                                //                                                   color: Colors.orange,
+                                //                                                 ),
+
+                                //                                               if (snapshot.data[index].recipeLevel == "Masterchef")
+                                //                                                 RecipeCardTag(
+                                //                                                   tag: "Masterchef",
+                                //                                                   color: Colors.red,
+                                //                                                 ),
+
+                                //                                               // RecipeCardTag(
+                                //                                               //   tag: "Popular",
+                                //                                               //   color: UgekColors.kSecondaryColor,
+                                //                                               // ),
+                                //                                               // RecipeCardTag(
+                                //                                               //   tag: "Halal",
+                                //                                               //   color: UgekColors.kSecondaryColor,
+                                //                                               // ),
+                                //                                             ],
+                                //                                           ),
+                                //                                         ),
+                                //                                       ),
+                                //                                       // NormalText(
+                                //                                       //   fontSize: 11,
+                                //                                       //   text:
+                                //                                       //       "${snapshot.data[index].recipeIngredients}",
+                                //                                       //   textColor:
+                                //                                       //       ColourConstant
+                                //                                       //           .kGreyColor,
+                                //                                       //   verticalPadding:
+                                //                                       //       1,
+                                //                                       // ),
+                                //                                     ],
+                                //                                   ),
+                                //                                 ),
+                                //                               ],
+                                //                             ),
+                                //                           ),
+                                //                         ),
+                                //                       ),
+                                //                       // Expanded(
+                                //                       //   flex: 1,
+                                //                       //   child: Center(
+                                //                       //     child: Container(
+                                //                       //       child: IconButton(
+                                //                       //         icon: post.isSaved
+                                //                       //             ? UgekIcons.liked
+                                //                       //             : UgekIcons.unliked,
+                                //                       //         onPressed: likeFunction,
+                                //                       //       ),
+                                //                       //     ),
+                                //                       //   ),
+                                //                       // )
+                                //                     ],
+                                //                   ),
+                                //                 ),
+                                //               ),
+                                //             ),
+                                //           ],
+                                //         )
+                                //       : SizedBox.shrink();
+                                // } else {
+                                //   return snapshot.data[index].recipeIngredients
+                                //               .contains(ingredientList1[0]) |
+                                //           snapshot.data[index].recipeIngredients
+                                //               .contains(ingredientList1[1]) |
+                                //           snapshot.data[index].recipeIngredients
+                                //               .contains(ingredientList1[2]) |
+                                //           snapshot.data[index].recipeIngredients
+                                //               .contains(ingredientList1[3]) |
+                                //           snapshot.data[index].recipeIngredients
+                                //               .contains(ingredientList1[4]) |
+                                //           snapshot.data[index].recipeIngredients
+                                //               .contains(ingredientList1[5])
+                                //       ? Column(
+                                //           children: [
+                                //             TouchableFeedback(
+                                //               onTap: () {
+                                //                 print("Testing");
+                                //                 Navigator.push(
+                                //                   context,
+                                //                   MaterialPageRoute(
+                                //                       builder: (context) =>
+                                //                           RecipeDetailPage(
+                                //                             title:
+                                //                                 '${snapshot.data[index].recipeName}',
+                                //                             recipe: snapshot
+                                //                                 .data[index],
+                                //                           )),
+                                //                 );
+                                //               },
+                                //               child: Card(
+                                //                 clipBehavior: Clip.antiAlias,
+                                //                 elevation: 5.0,
+                                //                 shape: RoundedRectangleBorder(
+                                //                   borderRadius:
+                                //                       BorderRadius.circular(10),
+                                //                 ),
+                                //                 child: Container(
+                                //                   padding: EdgeInsets.symmetric(
+                                //                     horizontal:
+                                //                         getProportionateScreenWidth(
+                                //                             15),
+                                //                     vertical:
+                                //                         getProportionateScreenHeight(
+                                //                             10),
+                                //                   ),
+                                //                   // height: getProportionateScreenHeight(125),
+                                //                   child: Row(
+                                //                     mainAxisAlignment:
+                                //                         MainAxisAlignment.start,
+                                //                     crossAxisAlignment:
+                                //                         CrossAxisAlignment
+                                //                             .start,
+                                //                     children: [
+                                //                       Container(
+                                //                         height:
+                                //                             getProportionateScreenHeight(
+                                //                                 100),
+                                //                         width:
+                                //                             getProportionateScreenHeight(
+                                //                                 100),
+                                //                         child: Opacity(
+                                //                           opacity: 1,
+                                //                           child: ClipRRect(
+                                //                             borderRadius:
+                                //                                 BorderRadius
+                                //                                     .circular(
+                                //                                         8.0),
+                                //                             child:
+                                //                                 Image.network(
+                                //                               '${snapshot.data[index].recipeImage}',
+                                //                             ),
+                                //                           ),
+                                //                         ),
+                                //                       ),
+                                //                       Expanded(
+                                //                         child: ConstrainedBox(
+                                //                           constraints:
+                                //                               BoxConstraints(
+                                //                             minHeight:
+                                //                                 getProportionateScreenHeight(
+                                //                                     100),
+                                //                           ),
+                                //                           child: Container(
+                                //                             padding:
+                                //                                 const EdgeInsets
+                                //                                         .symmetric(
+                                //                                     horizontal:
+                                //                                         10),
+                                //                             child: Column(
+                                //                               mainAxisAlignment:
+                                //                                   MainAxisAlignment
+                                //                                       .spaceBetween,
+                                //                               crossAxisAlignment:
+                                //                                   CrossAxisAlignment
+                                //                                       .start,
+                                //                               children: [
+                                //                                 Container(
+                                //                                   child: Column(
+                                //                                     crossAxisAlignment:
+                                //                                         CrossAxisAlignment
+                                //                                             .start,
+                                //                                     children: [
+                                //                                       Text(
+                                //                                         "Malaysian Food",
+                                //                                         maxLines:
+                                //                                             1,
+                                //                                         overflow:
+                                //                                             TextOverflow.ellipsis,
+                                //                                         style: TextStyle(
+                                //                                             fontWeight:
+                                //                                                 FontWeight.bold,
+                                //                                             fontSize: getProportionateScreenHeight(12),
+                                //                                             color: ColourConstant.kHeaderColor),
+                                //                                       ),
+                                //                                       Text(
+                                //                                         "${snapshot.data[index].recipeName}",
+                                //                                         maxLines:
+                                //                                             2,
+                                //                                         overflow:
+                                //                                             TextOverflow.ellipsis,
+                                //                                         style:
+                                //                                             TextStyle(
+                                //                                           fontSize:
+                                //                                               getProportionateScreenHeight(15),
+                                //                                           color:
+                                //                                               Colors.black,
+                                //                                           fontWeight:
+                                //                                               FontWeight.bold,
+                                //                                         ),
+                                //                                       ),
+                                //                                     ],
+                                //                                   ),
+                                //                                 ),
+                                //                                 Container(
+                                //                                   child: Column(
+                                //                                     crossAxisAlignment:
+                                //                                         CrossAxisAlignment
+                                //                                             .start,
+                                //                                     children: [
+                                //                                       Container(
+                                //                                         child:
+                                //                                             SingleChildScrollView(
+                                //                                           physics:
+                                //                                               ClampingScrollPhysics(),
+                                //                                           scrollDirection:
+                                //                                               Axis.horizontal,
+                                //                                           child:
+                                //                                               Row(
+                                //                                             // mainAxisAlignment: MainAxisAlignment.start,
+                                //                                             children: [
+                                //                                               if (snapshot.data[index].recipeLevel == "Beginner")
+                                //                                                 RecipeCardTag(
+                                //                                                   tag: "Beginner",
+                                //                                                   color: Colors.green,
+                                //                                                 ),
+                                //                                               if (snapshot.data[index].recipeLevel == "Intermediate")
+                                //                                                 RecipeCardTag(
+                                //                                                   tag: "Intermediate",
+                                //                                                   color: Colors.orange,
+                                //                                                 ),
+
+                                //                                               if (snapshot.data[index].recipeLevel == "Masterchef")
+                                //                                                 RecipeCardTag(
+                                //                                                   tag: "Masterchef",
+                                //                                                   color: Colors.red,
+                                //                                                 ),
+
+                                //                                               // RecipeCardTag(
+                                //                                               //   tag: "Popular",
+                                //                                               //   color: UgekColors.kSecondaryColor,
+                                //                                               // ),
+                                //                                               // RecipeCardTag(
+                                //                                               //   tag: "Halal",
+                                //                                               //   color: UgekColors.kSecondaryColor,
+                                //                                               // ),
+                                //                                             ],
+                                //                                           ),
+                                //                                         ),
+                                //                                       ),
+                                //                                       // NormalText(
+                                //                                       //   fontSize: 11,
+                                //                                       //   text:
+                                //                                       //       "${snapshot.data[index].recipeIngredients}",
+                                //                                       //   textColor:
+                                //                                       //       ColourConstant
+                                //                                       //           .kGreyColor,
+                                //                                       //   verticalPadding:
+                                //                                       //       1,
+                                //                                       // ),
+                                //                                     ],
+                                //                                   ),
+                                //                                 ),
+                                //                               ],
+                                //                             ),
+                                //                           ),
+                                //                         ),
+                                //                       ),
+                                //                       // Expanded(
+                                //                       //   flex: 1,
+                                //                       //   child: Center(
+                                //                       //     child: Container(
+                                //                       //       child: IconButton(
+                                //                       //         icon: post.isSaved
+                                //                       //             ? UgekIcons.liked
+                                //                       //             : UgekIcons.unliked,
+                                //                       //         onPressed: likeFunction,
+                                //                       //       ),
+                                //                       //     ),
+                                //                       //   ),
+                                //                       // )
+                                //                     ],
+                                //                   ),
+                                //                 ),
+                                //               ),
+                                //             ),
+                                //           ],
+                                //         )
+                                //       : SizedBox.shrink();
+                                // }
                               },
                             ),
                           ),

@@ -13,7 +13,7 @@ import 'main_common.dart';
 
 // Global userID hard code
 //int userID = 1;
-Future<void> backgroundHandler(RemoteMessage message) async{
+Future<void> backgroundHandler(RemoteMessage message) async {
   print(message.data.toString());
   print(message.notification!.title);
 }
@@ -22,16 +22,16 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   var messaging = FirebaseMessaging.instance;
-    messaging.getToken().then((value){
-        print(value);
-    });
+  messaging.getToken().then((value) {
+    print(value);
+  });
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   var url = Platform.isAndroid
       //? 'http://192.168.0.102:8000/api/'
-      ? 'http://10.0.2.2:8000/api/'
+      ? 'http://10.0.2.2/api/'
       : 'http://localhost/foodresq-api/';
 
   BuildEnvironment.init(flavor: BuildFlavor.local, baseUrl: url);

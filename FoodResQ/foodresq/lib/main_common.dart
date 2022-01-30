@@ -9,15 +9,20 @@ import 'package:foodresq/screen/start.dart';
 import 'package:foodresq/theme.dart';
 import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:overlay_support/overlay_support.dart';
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'FoodResQ',
-      theme: theme(),
-      initialRoute: StartScreen.routeName,
-      routes: routes,
+    return OverlaySupport(
+      child: GetMaterialApp(
+        title: 'FoodResQ',
+        theme: theme(),
+        initialRoute: StartScreen.routeName,
+        routes: routes,
+      ),
     );
   }
 }
+
+

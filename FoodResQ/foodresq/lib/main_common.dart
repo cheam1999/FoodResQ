@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
         theme: theme(),
         initialRoute: StartScreen.routeName,
         routes: routes,
+        debugShowCheckedModeBanner: false,
       ),
     );
   }

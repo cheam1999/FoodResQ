@@ -215,12 +215,12 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
                                                   .requestFocus(
                                                       new FocusNode());
 
+                                              // Show Date Picker Here
+                                              await _selectDate(context);
+
                                               dateController.text =
                                                   "${_selectedDate.toLocal()}"
                                                       .split(' ')[0];
-
-                                              // Show Date Picker Here
-                                              await _selectDate(context);
                                             },
                                             decoration: InputDecoration(
                                               labelText: 'Expiry Date',
